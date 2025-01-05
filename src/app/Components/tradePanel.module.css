@@ -1,0 +1,67 @@
+.paddings{
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.panel{
+    background-color: grey;
+
+    border-radius: 8px;
+    border: 1px solid lightgray;
+
+    width: 300px;
+    min-height: 100px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    align-items: stretch;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.header{
+    composes: paddings;
+    /* background-color: lightgray; */
+
+    min-height: 30px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.headerFont{
+    font-size: 18px;
+}
+
+.buttons{
+    composes: paddings;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+.field{
+    composes: paddings;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.label{
+    flex-basis: 120px;
+    flex-shrink: 0;
+}
+
+.infoFieldText{
+    flex-grow: 1;
+    flex-shrink: 1;
+    /* flex-basis: 0; */
+    width: 0px;
+}

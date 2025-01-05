@@ -1,10 +1,11 @@
 import Image from "next/image";
-import styles from "./page.module.css";
+import Styles from "./page.module.css";
+import TradePanel from "./Components/tradePanel";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      
+    <div className={Styles.page}>
+      <TradePanel/>
     </div>
   );
 }
