@@ -1,0 +1,44 @@
+.spacerSize_XXS {
+  height: 0.25rem;
+  width: 0.25rem;
+}
+.spacerSize_XS {
+  height: 0.5rem;
+  width: 0.5rem;
+}
+.spacerSize_S {
+  height: 1rem;
+  width: 1rem;
+}
+.spacerSize_M {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+.spacerSize_L {
+  height: 2rem;
+  width: 2rem;
+}
+.spacerSize_XL {
+  height: 3rem;
+  width: 3rem;
+}
+.spacerSize_XXL {
+  height: 4rem;
+  width: 4rem;
+}
+.spacerSize_XL3 {
+  height: 5rem;
+  width: 5rem;
+}
+.spacerSize_XL4 {
+  height: 6rem;
+  width: 6rem;
+}
+.spacerSize_XL5 {
+  height: 8rem;
+  width: 8rem;
+}
+.spacerSize_XL6 {
+  height: 10rem;
+  width: 10rem;
+}

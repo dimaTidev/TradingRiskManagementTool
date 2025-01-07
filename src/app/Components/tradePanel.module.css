@@ -1,20 +1,20 @@
 .paddings{
-    padding-left: 8px;
-    padding-right: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
 }
 
 .panel{
-    background-color: grey;
+    background-color: var(--background-color-secondary);
 
     border-radius: 8px;
-    border: 1px solid lightgray;
+    border: 1px solid var(--background-border-color);
 
-    width: 300px;
+    width: 420px;
     min-height: 100px;
 
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 
     align-items: stretch;
 
@@ -52,18 +52,29 @@
 
     display: flex;
     flex-direction: row;
+    align-items: center;
+
+    height: 30px;
 }
 
 .label{
+    color: var(--text-color-secondary);
     flex-basis: 120px;
     flex-shrink: 0;
+    font-size: var(--text-size-base);
 }
 
 .infoFieldText{
+    color: var(--text-color-secondary);
+    font-size: var(--text-size-base);
     flex-grow: 1;
     flex-shrink: 1;
     /* flex-basis: 0; */
     width: 0px;
+}
+
+.inputField{
+    flex-grow: 1;
 }
 
 .settingsOverlay{

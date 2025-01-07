@@ -5,6 +5,8 @@ import Styles from "./tradePanel.module.css";
 import InfoField from './infoField';
 import InputField from './inputField';
 import { getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
+import ActionButton, { Variant } from '@/lib/UIComponents/ActionButton';
+import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
 
 function roundNumber(number, decimals = 2){
     const decimV = 10**decimals;
@@ -143,7 +145,7 @@ export default function TradePanel() {
         <div className={Styles.panel}>
             <div className={Styles.header}>
                 <a className={Styles.headerFont}>Bybit</a>
-                <button onClick={() => setOpenSettings((s) => !s)}>Settings {openSettings}</button>
+                <ButtonIcon src="next.svg" onClick={() => setOpenSettings((s) => !s)}>Settings {openSettings}</ButtonIcon>
             </div>
 
             <hr/>
@@ -175,8 +177,8 @@ export default function TradePanel() {
 
             <hr/>
             <div className={Styles.buttons}>
-                <button onClick={submitLongOrder}>Buy <br/> Long</button>
-                <button onClick={submitShortOrder}>Sell <br/> Short</button>
+                <ActionButton variant={Variant.Default} onClick={submitLongOrder}>Long</ActionButton>
+                <ActionButton variant={Variant.Default} onClick={submitShortOrder}>Short</ActionButton>
             </div>
 
             {openSettings && (
