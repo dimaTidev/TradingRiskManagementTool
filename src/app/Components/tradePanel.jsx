@@ -117,6 +117,28 @@ export default function TradePanel() {
         // submitOrder(ticker, "Long", "Limit", calcResult.finalAssetVolume, 6, assetPrice, takeProfitPrice, stopLossPrice);
     }
 
+    async function submitShortOrder(){
+        // TODO: change the price if we place the market order
+        const assetPrice = roundNumber(Number.parseFloat(limitPrice), 1);//tickerCurrentPricing?.markPrice;
+
+        const calcResult = calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPercent, assetPrice, tickerInfo?.minOrderQty, tickerInfo?.qtyStep);
+
+        console.log("calcResult", calcResult);
+
+        const priceStopLossSwing = assetPrice * (stopLossPercent/100);
+
+        console.log("priceStopLossSwing", priceStopLossSwing);
+        
+        const takeProfitPrice = roundNumber(assetPrice - priceStopLossSwing * 2, 1);
+        const stopLossPrice = roundNumber(assetPrice + priceStopLossSwing, 1);
+
+        console.log("takeProfitPrice", takeProfitPrice);
+        console.log("stopLossPrice", stopLossPrice);
+        
+        submitOrder(ticker, "Short", "Limit", calcResult.finalAssetVolume, calcResult.finalLeverage, assetPrice, takeProfitPrice, stopLossPrice);
+        // submitOrder(ticker, "Long", "Limit", calcResult.finalAssetVolume, 6, assetPrice, takeProfitPrice, stopLossPrice);
+    }
+
     return (
         <div className={Styles.panel}>
             <div className={Styles.header}>
@@ -154,7 +176,7 @@ export default function TradePanel() {
             <hr/>
             <div className={Styles.buttons}>
                 <button onClick={submitLongOrder}>Buy <br/> Long</button>
-                <button>Sell <br/> Short</button>
+                <button onClick={submitShortOrder}>Sell <br/> Short</button>
             </div>
 
             {openSettings && (
