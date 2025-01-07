@@ -5,7 +5,7 @@ const InputField = forwardRef(({...props}, ref) => {
     return (
         <div className={Styles.field}>
             <div className={Styles.label}>{props.label}:</div>
-            <input ref={ref} value={props.value} onChange={(e) => props.onChange?.(e)} className={Styles.infoFieldText}></input>
+            <input ref={ref} {...props} className={Styles.infoFieldText}></input>
         </div>
     )
 });
