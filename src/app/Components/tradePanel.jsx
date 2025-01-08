@@ -129,8 +129,7 @@ export default function TradePanel() {
                 <a className={Styles.headerFont}>Bybit</a>
                 <ButtonIcon src="next.svg" size={Size.L} onClick={() => setOpenSettings(true)}>Settings {openSettings}</ButtonIcon>
             </div>
-            <ToggleField value={isAdvancedMode} onChange={() => setAdvancedMode((s) => !s)} label="Advanced mode"/>
-
+ 
             <hr/>
             <InputField type="number" value={capital} onChange={(e) => setCapital(e.target.value)} label="Capital"/>
             <InputField type="number" value={targetRisk} onChange={(e) => setTargetRisk(e.target.value)} label="Target Risk, %"/>
@@ -169,13 +168,14 @@ export default function TradePanel() {
                 <ActionButton variant={Variant.Default} onClick={submitShortOrder}>Short</ActionButton>
             </div>
 
-            {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
+            {openSettings && <Settings onClose={() => setOpenSettings(false)} isAdvancedMode={isAdvancedMode} setAdvancedMode={setAdvancedMode}/>}
         </div>
     )
 }
 
-function Settings({onClose, onApply}) {
+function Settings({onClose, onApply, isAdvancedMode, setAdvancedMode}) {
     const platformAPIContext = useContext(PlatformAPIContext);
+    const [isAdvancedModeOption, setAdvancedModeOption] = useState(isAdvancedMode);
 
     const apiKeyRef = useRef();
     const apiSecretRef = useRef();
@@ -189,6 +189,7 @@ function Settings({onClose, onApply}) {
         console.log(apiKey, apiSecret, passkey);
 
         platformAPIContext.setAPICredentials(apiKey, apiSecret, passkey);
+        setAdvancedMode(isAdvancedModeOption);
     
         onClose?.();
         onApply?.();
@@ -206,6 +207,8 @@ function Settings({onClose, onApply}) {
             <InputField ref={apiKeyRef} label="API key"/>
             <InputField ref={apiSecretRef} label="API secret"/>
             <InputField ref={apiPasskeyRef} label="Password"/>
+
+            <ToggleField checked={isAdvancedModeOption ? "checked" : ""} onChange={() => setAdvancedModeOption((s) => !s)} label="Advanced mode"/>
 
             <hr/>
             <div className={Styles.buttons}>
