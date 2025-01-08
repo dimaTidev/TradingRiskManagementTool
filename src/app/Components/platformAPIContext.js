@@ -12,24 +12,30 @@ export const PlatformAPIContext = React.createContext({
     getTickerInfo(ticker){}, 
     getTickerPricing(ticker){},
     CheckCredentialsSaved: false,
-    deleteCredentials(){}
+    CheckCredentialsAndPasswordSaved: false,
+    deleteCredentials(){},
+    setPassword(passkey){}
 });
 
 //useContext(PlatformAPIContext);
+
+const bybitAPISaveKey = "bybitSaveKey";
 
 export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
     const [apiKey, setapiKey] = useState(process.env.NEXT_PUBLIC_API_KEY);
     const [apiSecret, setapiSecret] = useState(process.env.NEXT_PUBLIC_API_SECRET);
-    const [passkey, setPassKey] = useState("");
+    const [passkey, setPassKey] = useState(undefined);
 
     useEffect(() => {
         setInitialized(false);
         const createPlatformClient = async () => {
             try {
-                if(passkey == undefined || apiKey == undefined || apiSecret == undefined){
-                    deleteClient();
+                deleteClient();
+                
+                if(passkey == undefined || passkey == "" || apiKey == undefined || apiSecret == undefined){
+                    
                 }else{
                     await createClient(decryptData(passkey, apiKey), decryptData(passkey, apiSecret));
                 } 
@@ -141,6 +147,10 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         setPassKey(undefined);
     }
 
+    function handleSetPassword(passkey){
+        setPassKey(passkey);   
+    }
+
     return (
         <PlatformAPIContext.Provider value={{
             setAPICredentials: handleSetAPICredentials,
@@ -148,8 +158,10 @@ export function BybitPlatfomAPIContextProvider({ children }) {
             placeLongOrder: handlePlaceLongOrder,
             getTickerInfo: handleGetTickerInfo,
             getTickerPricing: handleGetTickerPricing,
-            CheckCredentialsSaved: () => apiKey != undefined && apiSecret != undefined && passkey != null,
-            deleteCredentials: handleDeleteCredentials
+            CheckCredentialsSaved: () => apiKey != undefined && apiSecret != undefined,
+            CheckCredentialsAndPasswordSaved: () => apiKey != undefined && apiSecret != undefined && passkey != null && passkey != "",
+            deleteCredentials: handleDeleteCredentials,
+            setPassword: handleSetPassword
         }}>
             {children}
         </PlatformAPIContext.Provider>

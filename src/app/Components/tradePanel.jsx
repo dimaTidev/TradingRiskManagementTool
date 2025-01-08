@@ -28,6 +28,9 @@ export default function TradePanel() {
     const [limitPrice, setLimitPrice] = useState(0);
 
     useEffect(() => {
+        if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
+            return;
+
         const tickerInfo = async () => {
             const responceTicker = await platformAPIContext.getTickerInfo(ticker);
             const responceTickerPrice = await platformAPIContext.getTickerPricing(ticker);
@@ -182,13 +185,16 @@ function Settings({onClose, onApply, isAdvancedMode, setAdvancedMode}) {
     const apiPasskeyRef = useRef();
 
     function handleApply(){
-        const apiKey = apiKeyRef.current.value;
-        const apiSecret= apiSecretRef.current.value;
-        const passkey = apiPasskeyRef.current.value;
+        if(!platformAPIContext.CheckCredentialsSaved()){
+            const apiKey = apiKeyRef.current.value;
+            const apiSecret= apiSecretRef.current.value;
+            const passkey = apiPasskeyRef.current.value;
 
-        console.log(apiKey, apiSecret, passkey);
+            console.log(apiKey, apiSecret, passkey);
 
-        platformAPIContext.setAPICredentials(apiKey, apiSecret, passkey);
+            platformAPIContext.setAPICredentials(apiKey, apiSecret, passkey);
+        }
+
         setAdvancedMode(isAdvancedModeOption);
     
         onClose?.();
@@ -230,7 +236,7 @@ export function UnlockCredentialsField() {
     
   return (
     <div className={Styles.unlockCredentialsField}>
-        <InputField label="Enter password"/>
+        <InputField onBlur={(e) => platformAPIContext.setPassword(e.target.value)} label="Enter password"/>
         <ActionButton onClick={() => platformAPIContext.deleteCredentials()}>Remove Credentials</ActionButton>
     </div>
   )
