@@ -14,7 +14,7 @@ export const PlatformAPIContext = React.createContext({
 
 //useContext(PlatformAPIContext);
 
-export function PlatformAPIContextProvider({ children }) {
+export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
     const [apiKey, setapiKey] = useState(process.env.NEXT_PUBLIC_API_KEY);
