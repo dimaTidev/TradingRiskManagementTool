@@ -7,6 +7,7 @@ import InputField from './inputField';
 import { getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
 import ActionButton, { Variant } from '@/lib/UIComponents/ActionButton';
 import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
+import ToggleField from './toggleField';
 
 function roundNumber(number, decimals = 2){
     const decimV = 10**decimals;
@@ -30,10 +31,9 @@ function calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPerce
     const finalMargin = roundNumber(finalVolume / finalLeverage);
     const finalAssetVolume = (minVolume + volumeStep * roundedCount) / price;
 
-    console.log("minAssetQty", minAssetQty);
-    console.log("assetQtyStep", assetQtyStep);
-    console.log("price", price);
-    
+    // console.log("minAssetQty", minAssetQty);
+    // console.log("assetQtyStep", assetQtyStep);
+    // console.log("price", price);
 
     return{
         leverage,
@@ -49,6 +49,7 @@ function calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPerce
 
 export default function TradePanel() {
     const [openSettings, setOpenSettings] = useState(false);
+    const [isAdvancedMode, setAdvancedMode] = useState(false);
 
     // const [isLimitOrder, setLimitOrder] = useState(true);
 
@@ -83,8 +84,6 @@ export default function TradePanel() {
     // const dealRisk = roundNumber(volume * (stopLossPercent / 100));
 
     const calcResult = calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPercent, limitPrice, tickerInfo?.minOrderQty, tickerInfo?.qtyStep);
-
-    console.log("calcResult", calcResult);
 
     const leverage = calcResult.finalLeverage;
     const marginInDeal = calcResult.finalMargin;
@@ -147,33 +146,39 @@ export default function TradePanel() {
                 <a className={Styles.headerFont}>Bybit</a>
                 <ButtonIcon src="next.svg" onClick={() => setOpenSettings((s) => !s)}>Settings {openSettings}</ButtonIcon>
             </div>
+            <ToggleField value={isAdvancedMode} onChange={() => setAdvancedMode((s) => !s)} label="Advanced mode"/>
 
             <hr/>
-            <InputField value={capital} onChange={(e) => setCapital(e.target.value)} label="Capital"/>
-            <InputField value={targetRisk} onChange={(e) => setTargetRisk(e.target.value)} label="Target Risk, %"/>
+            <InputField type="number" value={capital} onChange={(e) => setCapital(e.target.value)} label="Capital"/>
+            <InputField type="number" value={targetRisk} onChange={(e) => setTargetRisk(e.target.value)} label="Target Risk, %"/>
             <InfoField label="Risk capital" text={riskCapital.toString()}/>
             <hr/>
-            <InputField value={capInDealPercent} onChange={(e) => setCapInDealPersent(e.target.value)} label="Margin, %"/>
-            <InfoField label="Margin" text={dealCapital.toString()}/>
+            <InputField type="number" value={capInDealPercent} onChange={(e) => setCapInDealPersent(e.target.value)} label="Margin, %"/>
+            {/* <InfoField label="Margin" text={dealCapital.toString()}/> */}
             <hr/>
             <InputField defaultValue={ticker} onBlur={(e) => setTicker(e.target.value)} label="Ticker"/>
-            <InputField defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)} label="Limit price"/>
             {/* {tickerCurrentPricing?.markPrice && <InfoField label="Cur Price" text={`${tickerCurrentPricing?.markPrice} ${tickerInfo?.quoteCoin}`}/>} */}
-            {tickerInfo?.minOrderQty && <InfoField label="MinOrderQty" text={`${tickerInfo?.minOrderQty} ${tickerInfo?.baseCoin}`}/>}
-            {tickerInfo?.qtyStep && <InfoField label="qtyStep" text={`${tickerInfo?.qtyStep} ${tickerInfo?.baseCoin}`}/>}
-            {tickerInfo?.minLeverage && <InfoField label="minLeverage" text={`${tickerInfo?.minLeverage}x`}/>}
-            {tickerInfo?.maxLeverage && <InfoField label="maxLeverage" text={`${tickerInfo?.maxLeverage}x`}/>}
-            {/* <div>{tickerInfo?.errorMsg}</div> */}
+            {isAdvancedMode && <>
+                {tickerInfo?.minOrderQty && <InfoField label="MinOrderQty" text={`${tickerInfo?.minOrderQty} ${tickerInfo?.baseCoin}`}/>}
+                {tickerInfo?.qtyStep && <InfoField label="qtyStep" text={`${tickerInfo?.qtyStep} ${tickerInfo?.baseCoin}`}/>}
+                {tickerInfo?.minLeverage && <InfoField label="minLeverage" text={`${tickerInfo?.minLeverage}x`}/>}
+                {tickerInfo?.maxLeverage && <InfoField label="maxLeverage" text={`${tickerInfo?.maxLeverage}x`}/>}
+            </>}
+            
             {tickerInfo && tickerInfo.errorMsg && <div>{tickerInfo.errorMsg}</div>}
             <hr/>
-            <InputField value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} label="StopLoss, %"/>
+            <InputField type="number" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)} label="Limit price"/>
+            <InputField type="number" value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} label="StopLoss, %"/>
             <hr/>
-            <InfoField label="Margin/Deal" text={marginInDeal.toString()}/>
             <InfoField label="Leverage, x" text={leverage.toString()}/>
             <InfoField label="Volume" text={volume.toString()}/>
+            
             <InfoField label="Asset Volume" text={`${assetVolume.toString()} ${tickerInfo?.baseCoin}`}/>
-            <InfoField label="Risk" text={dealRisk.toString()}/>
+            
+            <InfoField label="Margin" text={marginInDeal.toString()}/>
             <InfoField label="Risk %" text={`${dealRiskPersent.toString()}%`}/>
+
+            {isAdvancedMode && <InfoField label="Risk" text={dealRisk.toString()}/>}
 
             <hr/>
             <div className={Styles.buttons}>

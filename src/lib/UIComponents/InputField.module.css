@@ -14,7 +14,7 @@
 
 .inputField {
   padding: 0.4rem;
-  padding-right: 2.5rem;
+  /* padding-right: 2.5rem; */
   width: 100%;
   font-size: var(--text-size-base);
   border: 1px solid var(--background-border-color);
