@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from 'react'
-import { createClient, getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
+import { createClient, deleteClient, getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
+import { decryptData, encryptData } from '@/lib/encryption/EncryptionController';
 
 // Create a context and use it within the component
 export const PlatformAPIContext = React.createContext({
@@ -10,6 +11,8 @@ export const PlatformAPIContext = React.createContext({
     placeLongOrder(params){},
     getTickerInfo(ticker){}, 
     getTickerPricing(ticker){},
+    CheckCredentialsSaved: false,
+    deleteCredentials(){}
 });
 
 //useContext(PlatformAPIContext);
@@ -19,27 +22,43 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     const [isInitialized, setInitialized] = useState(false);
     const [apiKey, setapiKey] = useState(process.env.NEXT_PUBLIC_API_KEY);
     const [apiSecret, setapiSecret] = useState(process.env.NEXT_PUBLIC_API_SECRET);
+    const [passkey, setPassKey] = useState("");
 
     useEffect(() => {
-        console.log("create client");
-
         setInitialized(false);
-        const createCl = async () => {
-            await createClient(apiKey, apiSecret);
+        const createPlatformClient = async () => {
+            try {
+                if(passkey == undefined || apiKey == undefined || apiSecret == undefined){
+                    deleteClient();
+                }else{
+                    await createClient(decryptData(passkey, apiKey), decryptData(passkey, apiSecret));
+                } 
+            } catch (error) {
+                console.error(error);
+            }
+            
             setInitialized(true);
         }
         
-        createCl();
+        createPlatformClient();
         
-    }, [apiKey, apiSecret]);
+    }, [apiKey, apiSecret, passkey]);
 
     if(!isInitialized)
         return;
 
     function handleSetAPICredentials(apiKey, apiSecret, password){
         // TODO: encode API credentials!!!
-        setapiKey(apiKey);
-        setapiSecret(apiSecret);
+        const enctypredAPIKey = encryptData(password, apiKey);
+        const enctypredAPISecret = encryptData(password, apiSecret);
+
+        setapiKey(enctypredAPIKey);
+        setapiSecret(enctypredAPISecret);
+
+        console.log("enctypredAPIKey", enctypredAPIKey);
+        console.log("enctypredAPISecret", enctypredAPISecret);
+        
+        setPassKey(password);
     }
 
     /**
@@ -52,19 +71,23 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.takeProfitPrice 
      * @param {Number} params.stopLossPrice 
      */
-    function handlePlaceShortOrder(params){
+    async function handlePlaceShortOrder(params){
         console.log("place short order");
         // TODO: add error message handling!
-        submitOrder(
-            params.ticker,
-            "Short",
-            params.orderType,
-            params.assetVolume,
-            params.leverage,
-            params.orderPrice,
-            params.takeProfitPrice,
-            params.stopLossPrice
-        );
+        try {
+            submitOrder(
+                params.ticker,
+                "Short",
+                params.orderType,
+                params.assetVolume,
+                params.leverage,
+                params.orderPrice,
+                params.takeProfitPrice,
+                params.stopLossPrice
+            );
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**
@@ -77,27 +100,45 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.takeProfitPrice 
      * @param {Number} params.stopLossPrice 
      */
-    function handlePlaceLongOrder(params){
+    async function handlePlaceLongOrder(params){
         console.log("place long order");
         // TODO: add error message handling!
-        submitOrder(
-            params.ticker,
-            "Long",
-            params.orderType,
-            params.assetVolume,
-            params.leverage,
-            params.orderPrice,
-            params.takeProfitPrice,
-            params.stopLossPrice
-        );
+        try {
+            submitOrder(
+                params.ticker,
+                "Long",
+                params.orderType,
+                params.assetVolume,
+                params.leverage,
+                params.orderPrice,
+                params.takeProfitPrice,
+                params.stopLossPrice
+            );
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     async function handleGetTickerInfo(ticker){
-        return await getTickerInfo(ticker);
+        try {
+            return await getTickerInfo(ticker);
+        } catch (error) {
+            console.log(error);
+        }
     }
     
     async function handleGetTickerPricing(ticker){
-        return await getTickerPricing(ticker);
+        try {
+            return await getTickerPricing(ticker);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    function handleDeleteCredentials(){
+        setapiKey(undefined);
+        setapiSecret(undefined);
+        setPassKey(undefined);
     }
 
     return (
@@ -107,6 +148,8 @@ export function BybitPlatfomAPIContextProvider({ children }) {
             placeLongOrder: handlePlaceLongOrder,
             getTickerInfo: handleGetTickerInfo,
             getTickerPricing: handleGetTickerPricing,
+            CheckCredentialsSaved: () => apiKey != undefined && apiSecret != undefined && passkey != null,
+            deleteCredentials: handleDeleteCredentials
         }}>
             {children}
         </PlatformAPIContext.Provider>

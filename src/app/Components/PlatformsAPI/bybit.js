@@ -15,6 +15,10 @@ export async function createClient(apiKey, apiSecret){
     });
 }
 
+export function deleteClient(){
+    client = undefined;
+}
+
 // async function getWalletBalance(){
 //     const responce = await client.getWalletBalance({
 //         accountType: 'UNIFIED',

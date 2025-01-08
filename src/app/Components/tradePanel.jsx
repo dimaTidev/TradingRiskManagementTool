@@ -204,9 +204,13 @@ function Settings({onClose, onApply, isAdvancedMode, setAdvancedMode}) {
             </div>
             <hr/>
 
-            <InputField ref={apiKeyRef} label="API key"/>
-            <InputField ref={apiSecretRef} label="API secret"/>
-            <InputField ref={apiPasskeyRef} label="Password"/>
+            {!platformAPIContext.CheckCredentialsSaved() ? <>
+                <InputField ref={apiKeyRef} label="API key"/>
+                <InputField ref={apiSecretRef} label="API secret"/>
+                <InputField ref={apiPasskeyRef} label="Password"/>
+            </> : <UnlockCredentialsField/>}
+
+            {}
 
             <ToggleField checked={isAdvancedModeOption ? "checked" : ""} onChange={() => setAdvancedModeOption((s) => !s)} label="Advanced mode"/>
 
@@ -220,4 +224,16 @@ function Settings({onClose, onApply, isAdvancedMode, setAdvancedMode}) {
     </div>
   )
 }
+
+export function UnlockCredentialsField() {
+    const platformAPIContext = useContext(PlatformAPIContext);
+    
+  return (
+    <div className={Styles.unlockCredentialsField}>
+        <InputField label="Enter password"/>
+        <ActionButton onClick={() => platformAPIContext.deleteCredentials()}>Remove Credentials</ActionButton>
+    </div>
+  )
+}
+
 
