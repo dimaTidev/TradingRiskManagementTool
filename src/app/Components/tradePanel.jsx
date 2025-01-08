@@ -1,53 +1,18 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import Styles from "./tradePanel.module.css";
 import InfoField from './infoField';
 import InputField from './inputField';
-import { getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
 import ActionButton, { Variant } from '@/lib/UIComponents/ActionButton';
-import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
+import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
 import ToggleField from './toggleField';
-
-function roundNumber(number, decimals = 2){
-    const decimV = 10**decimals;
-    return Math.round(number  * decimV) / decimV;
-}
-
-function calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPercent, price, minAssetQty, assetQtyStep){
-    const riskCapital = capital * (targetRisk / 100);
-    // const dealCapital = capital * (capInDealPercent / 100);
-
-    const leverage = roundNumber(Math.max(1, (riskCapital/(stopLossPercent/100))/capital/(capInDealPercent/100)));
-    const marginInDeal = roundNumber(riskCapital / (stopLossPercent / 100) / leverage);
-    const volume = roundNumber(marginInDeal * leverage);
-    // const dealRisk = roundNumber(volume * (stopLossPercent / 100));
-
-    const minVolume = minAssetQty * price;
-    const volumeStep = assetQtyStep * price;
-    const roundedCount = Math.max(0, Math.ceil((volume - minVolume) / volumeStep));
-    const finalVolume = roundNumber(minVolume + volumeStep * roundedCount);
-    const finalLeverage = roundNumber(Math.max(1, finalVolume / marginInDeal));
-    const finalMargin = roundNumber(finalVolume / finalLeverage);
-    const finalAssetVolume = (minVolume + volumeStep * roundedCount) / price;
-
-    // console.log("minAssetQty", minAssetQty);
-    // console.log("assetQtyStep", assetQtyStep);
-    // console.log("price", price);
-
-    return{
-        leverage,
-        volume,
-        marginInDeal,
-
-        finalLeverage,
-        finalVolume,
-        finalAssetVolume,
-        finalMargin
-    }
-}
+import { PlatformAPIContext } from './platformAPIContext';
+import { calculateRiskOrder, roundNumber } from './tradeUtils';
 
 export default function TradePanel() {
+    const platformAPIContext = useContext(PlatformAPIContext);
+
     const [openSettings, setOpenSettings] = useState(false);
     const [isAdvancedMode, setAdvancedMode] = useState(false);
 
@@ -64,8 +29,8 @@ export default function TradePanel() {
 
     useEffect(() => {
         const tickerInfo = async () => {
-            const responceTicker = await getTickerInfo(ticker);
-            const responceTickerPrice = await getTickerPricing(ticker);
+            const responceTicker = await platformAPIContext.getTickerInfo(ticker);
+            const responceTickerPrice = await platformAPIContext.getTickerPricing(ticker);
 
             setTickerInfo(responceTicker);
             setTickerCurrentPricing(responceTickerPrice);
@@ -114,8 +79,17 @@ export default function TradePanel() {
         console.log("takeProfitPrice", takeProfitPrice);
         console.log("stopLossPrice", stopLossPrice);
         
-        submitOrder(ticker, "Long", "Limit", calcResult.finalAssetVolume, calcResult.finalLeverage, assetPrice, takeProfitPrice, stopLossPrice);
-        // submitOrder(ticker, "Long", "Limit", calcResult.finalAssetVolume, 6, assetPrice, takeProfitPrice, stopLossPrice);
+        const orderParams = {
+            ticker: ticker,
+            orderType: "Limit",
+            assetVolume: calcResult.finalAssetVolume,
+            leverage: calcResult.finalLeverage,
+            orderPrice: assetPrice,
+            takeProfitPrice: takeProfitPrice,
+            stopLossPrice, stopLossPrice
+        }
+
+        platformAPIContext.placeLongOrder(orderParams);
     }
 
     async function submitShortOrder(){
@@ -136,15 +110,24 @@ export default function TradePanel() {
         console.log("takeProfitPrice", takeProfitPrice);
         console.log("stopLossPrice", stopLossPrice);
         
-        submitOrder(ticker, "Short", "Limit", calcResult.finalAssetVolume, calcResult.finalLeverage, assetPrice, takeProfitPrice, stopLossPrice);
-        // submitOrder(ticker, "Long", "Limit", calcResult.finalAssetVolume, 6, assetPrice, takeProfitPrice, stopLossPrice);
+        const orderParams = {
+            ticker: ticker,
+            orderType: "Limit",
+            assetVolume: calcResult.finalAssetVolume,
+            leverage: calcResult.finalLeverage,
+            orderPrice: assetPrice,
+            takeProfitPrice: takeProfitPrice,
+            stopLossPrice, stopLossPrice
+        }
+
+        platformAPIContext.placeShortOrder(orderParams);
     }
 
     return (
         <div className={Styles.panel}>
             <div className={Styles.header}>
                 <a className={Styles.headerFont}>Bybit</a>
-                <ButtonIcon src="next.svg" onClick={() => setOpenSettings((s) => !s)}>Settings {openSettings}</ButtonIcon>
+                <ButtonIcon src="next.svg" size={Size.L} onClick={() => setOpenSettings(true)}>Settings {openSettings}</ButtonIcon>
             </div>
             <ToggleField value={isAdvancedMode} onChange={() => setAdvancedMode((s) => !s)} label="Advanced mode"/>
 
@@ -186,9 +169,52 @@ export default function TradePanel() {
                 <ActionButton variant={Variant.Default} onClick={submitShortOrder}>Short</ActionButton>
             </div>
 
-            {openSettings && (
-                <div className={Styles.settingsOverlay}>openSettings</div>
-            )}
+            {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
         </div>
     )
 }
+
+function Settings({onClose, onApply}) {
+    const platformAPIContext = useContext(PlatformAPIContext);
+
+    const apiKeyRef = useRef();
+    const apiSecretRef = useRef();
+    const apiPasskeyRef = useRef();
+
+    function handleApply(){
+        const apiKey = apiKeyRef.current.value;
+        const apiSecret= apiSecretRef.current.value;
+        const passkey = apiPasskeyRef.current.value;
+
+        console.log(apiKey, apiSecret, passkey);
+
+        platformAPIContext.setAPICredentials(apiKey, apiSecret, passkey);
+    
+        onClose?.();
+        onApply?.();
+    }
+
+  return (
+    <div className={Styles.settingsOverlay}>
+        <div className={Styles.panel} onClick={(e) => e.stopPropagation()}>
+            <div className={Styles.header}>
+                <a className={Styles.headerFont}>Settings</a>
+                <ButtonIcon src="next.svg" size={Size.L} onClick={onClose}>X</ButtonIcon>
+            </div>
+            <hr/>
+
+            <InputField ref={apiKeyRef} label="API key"/>
+            <InputField ref={apiSecretRef} label="API secret"/>
+            <InputField ref={apiPasskeyRef} label="Password"/>
+
+            <hr/>
+            <div className={Styles.buttons}>
+                <ActionButton variant={Variant.Default} onClick={handleApply}>Apply</ActionButton>
+                <ActionButton variant={Variant.Default} onClick={onClose}>Cancel</ActionButton>
+            </div>
+
+        </div>
+    </div>
+  )
+}
+

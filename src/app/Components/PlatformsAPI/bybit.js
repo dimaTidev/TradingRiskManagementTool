@@ -3,13 +3,17 @@ const { RestClientV5 } = require('bybit-api');
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 const apiSecret = process.env.NEXT_PUBLIC_API_SECRET;
 
-const client = new RestClientV5({
-    testnet: true,
-    key: apiKey,
-    secret: apiSecret,
-    parseAPIRateLimits: true,
-    demoTrading: true
-});
+let client;
+
+export async function createClient(apiKey, apiSecret){
+    client = new RestClientV5({
+        testnet: true,
+        key: apiKey,
+        secret: apiSecret,
+        parseAPIRateLimits: true,
+        demoTrading: true
+    });
+}
 
 // async function getWalletBalance(){
 //     const responce = await client.getWalletBalance({
@@ -118,6 +122,13 @@ export async function submitOrder(symbol, side, orderType, qty, leverage, price,
 // }
 
 export async function getTickerPricing(symbol){
+    if(symbol == undefined){
+        return {
+            markPrice: 0,
+            errorMsg: undefined
+        }
+    }
+
     try {
         const response = await client.getTickers({
             category: 'inverse',
@@ -138,6 +149,12 @@ export async function getTickerPricing(symbol){
 }
 
 export async function getTickerInfo(symbol){
+    if(symbol == undefined){
+        return {
+            markPrice: 0,
+            errorMsg: undefined
+        }
+    }
     
     try {
         const response = await client.getInstrumentsInfo({
