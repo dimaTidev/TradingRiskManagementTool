@@ -19,13 +19,14 @@ export const PlatformAPIContext = React.createContext({
 
 //useContext(PlatformAPIContext);
 
-const bybitAPISaveKey = "bybitSaveKey";
+const bybitAPIKeyStorageKey = "qGN5KuuVNg9sJQl";
+const bybitAPISecretStorageKey = "IHzJQlbNOs+Y5sfiuuVNg9f";
 
 export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
-    const [apiKey, setapiKey] = useState(process.env.NEXT_PUBLIC_API_KEY);
-    const [apiSecret, setapiSecret] = useState(process.env.NEXT_PUBLIC_API_SECRET);
+    const [apiKey, setapiKey] = useState(localStorage.getItem(bybitAPIKeyStorageKey));
+    const [apiSecret, setapiSecret] = useState(localStorage.getItem(bybitAPISecretStorageKey));
     const [passkey, setPassKey] = useState(undefined);
 
     useEffect(() => {
@@ -33,7 +34,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         const createPlatformClient = async () => {
             try {
                 deleteClient();
-                
+
                 if(passkey == undefined || passkey == "" || apiKey == undefined || apiSecret == undefined){
                     
                 }else{
@@ -54,15 +55,14 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         return;
 
     function handleSetAPICredentials(apiKey, apiSecret, password){
-        // TODO: encode API credentials!!!
         const enctypredAPIKey = encryptData(password, apiKey);
         const enctypredAPISecret = encryptData(password, apiSecret);
 
         setapiKey(enctypredAPIKey);
         setapiSecret(enctypredAPISecret);
 
-        console.log("enctypredAPIKey", enctypredAPIKey);
-        console.log("enctypredAPISecret", enctypredAPISecret);
+        localStorage.setItem(bybitAPIKeyStorageKey, enctypredAPIKey);
+        localStorage.setItem(bybitAPISecretStorageKey, enctypredAPISecret);
         
         setPassKey(password);
     }
