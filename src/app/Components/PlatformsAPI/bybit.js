@@ -5,13 +5,13 @@ const apiSecret = process.env.NEXT_PUBLIC_API_SECRET;
 
 let client;
 
-export async function createClient(apiKey, apiSecret){
+export async function createClient(apiKey, apiSecret, demoTrading){
     client = new RestClientV5({
-        testnet: true,
+        testnet: demoTrading ? true : false,
         key: apiKey,
         secret: apiSecret,
         parseAPIRateLimits: true,
-        demoTrading: true
+        demoTrading: demoTrading
     });
 }
 
@@ -202,6 +202,15 @@ export async function getTickerInfo(symbol){
     */
 }
 
+export async function getAccountInfo(){
+    try {
+       const responce = await client.getAccountInfo();
+       return responce;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
 
 // async function Program(){
 //     const result = await getTickerInfo('BTCUSDT');

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react'
-import { createClient, deleteClient, getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
+import { createClient, getAccountInfo, getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
 import { decryptData, encryptData } from '@/lib/encryption/EncryptionController';
 
 // Create a context and use it within the component
@@ -14,57 +14,75 @@ export const PlatformAPIContext = React.createContext({
     CheckCredentialsSaved: false,
     CheckCredentialsAndPasswordSaved: false,
     deleteCredentials(){},
-    setPassword(passkey){}
+    setPassword(passkey){},
+    isDemoTrading: false
 });
 
 //useContext(PlatformAPIContext);
 
 const bybitAPIKeyStorageKey = "qGN5KuuVNg9sJQl";
 const bybitAPISecretStorageKey = "IHzJQlbNOs+Y5sfiuuVNg9f";
+const bybitAPIPassKey = "dghk58fjo38jf2";
 
 export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
-    const [apiKey, setapiKey] = useState(localStorage.getItem(bybitAPIKeyStorageKey));
-    const [apiSecret, setapiSecret] = useState(localStorage.getItem(bybitAPISecretStorageKey));
-    const [passkey, setPassKey] = useState(decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey)));
+    const [demoTrading, setDemoTrading] = useState(false);
+    const [apiKey, setapiKey] = useState("");
+    const [apiSecret, setapiSecret] = useState("");
+    const [passkey, setPassKey] = useState("");
 
     useEffect(() => {
         setInitialized(false);
-        const createPlatformClient = async () => {
+        const logIn = async () => {
             try {
-                deleteClient();
+                const apiKey = localStorage.getItem(bybitAPIKeyStorageKey);
+                const apiSecret = localStorage.getItem(bybitAPISecretStorageKey);
+                const passKey = decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey));
+                const demoTrading = localStorage.getItem("demoTrading");
+                
+                const responce = await checkPassword(apiKey, apiSecret, passKey, demoTrading);
+                if(responce != undefined){
+                    setPassKey(undefined);
+                }
 
-                if(passkey == undefined || passkey == "" || apiKey == undefined || apiSecret == undefined){
-                    
-                }else{
-                    await createClient(decryptData(passkey, apiKey), decryptData(passkey, apiSecret));
-                } 
+                setapiKey(apiKey);
+                setapiSecret(apiSecret);
+                setDemoTrading(demoTrading);
+
             } catch (error) {
                 console.error(error);
             }
-            
+
             setInitialized(true);
         }
         
-        createPlatformClient();
+        logIn();
         
-    }, [apiKey, apiSecret, passkey]);
+    }, []);
 
     if(!isInitialized)
         return;
 
-    function handleSetAPICredentials(apiKey, apiSecret, password){
+    async function handleSetAPICredentials(apiKey, apiSecret, password, demoTrading){
         const enctypredAPIKey = encryptData(password, apiKey);
         const enctypredAPISecret = encryptData(password, apiSecret);
 
-        setapiKey(enctypredAPIKey);
-        setapiSecret(enctypredAPISecret);
+        const responce = await checkPassword(enctypredAPIKey, enctypredAPISecret, password, demoTrading);
 
-        localStorage.setItem(bybitAPIKeyStorageKey, enctypredAPIKey);
-        localStorage.setItem(bybitAPISecretStorageKey, enctypredAPISecret);
-        
-        setPassKey(password);
+        if(responce == undefined || responce == "" || responce == "OK"){
+            setapiKey(enctypredAPIKey);
+            setapiSecret(enctypredAPISecret);
+            setDemoTrading(demoTrading);
+    
+            localStorage.setItem(bybitAPIKeyStorageKey, enctypredAPIKey);
+            localStorage.setItem(bybitAPISecretStorageKey, enctypredAPISecret);
+            localStorage.setItem("demoTrading", demoTrading);
+        }
+
+        return {
+            errorMsg: responce 
+        }
     }
 
     /**
@@ -145,11 +163,64 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         setapiKey(undefined);
         setapiSecret(undefined);
         setPassKey(undefined);
+        setDemoTrading(undefined);
+
+        localStorage.removeItem(bybitAPIKeyStorageKey);
+        localStorage.removeItem(bybitAPISecretStorageKey);
+        localStorage.removeItem("demoTrading");
+        sessionStorage.removeItem(bybitAPIPassKey);
     }
 
-    function handleSetPassword(passkey){
-        setPassKey(passkey);
-        sessionStorage.setItem(bybitAPIPassKey, encryptData("passkey", passkey));  
+    async function handleSetPassword(passkey){
+        return checkPassword(apiKey, apiSecret, passkey, demoTrading);
+    }
+
+    async function checkPassword(apiKey, apiSecret, passkey, demoTrading){
+        // Check the pass key
+        if(passkey == undefined || passkey == ""){
+            // TODO: throw an error message
+            return;
+        }
+
+        // Check the saved credentials!
+        if(apiKey == undefined || apiKey == "" || apiSecret == undefined || apiSecret == ""){
+            // TODO: throw an error message
+            return;
+        }
+
+        // decryptData credentials
+
+        let decodedApiKey;
+        let decodedApiSecret;
+
+        try {
+            decodedApiKey = decryptData(passkey, apiKey);
+            decodedApiSecret = decryptData(passkey, apiSecret);
+        } catch (error) {
+            return "Decryption failure"
+        }
+
+        // Try to create a client
+        await createClient(decodedApiKey, decodedApiSecret, demoTrading);
+
+        console.log("decodedApiKey", decodedApiKey);
+        console.log("decodedApiSecret", decodedApiSecret);
+        
+        // Verify credentials
+        const responce = await getAccountInfo();
+
+        console.log("responce", responce);
+
+        if(responce.retCode == 0 && responce.retMsg == "OK"){
+            console.log("Success"); 
+            sessionStorage.setItem(bybitAPIPassKey, encryptData("passkey", passkey));
+            setPassKey(passkey);
+        }else{
+            console.log("Failure");
+            return responce.retMsg;
+        }
+
+        return undefined;
     }
 
     return (
@@ -162,7 +233,8 @@ export function BybitPlatfomAPIContextProvider({ children }) {
             CheckCredentialsSaved: () => apiKey != undefined && apiSecret != undefined,
             CheckCredentialsAndPasswordSaved: () => apiKey != undefined && apiSecret != undefined && passkey != null && passkey != "",
             deleteCredentials: handleDeleteCredentials,
-            setPassword: handleSetPassword
+            setPassword: handleSetPassword,
+            isDemoTrading: demoTrading
         }}>
             {children}
         </PlatformAPIContext.Provider>
