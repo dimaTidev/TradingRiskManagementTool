@@ -28,7 +28,12 @@ export default function TradePanel() {
     const [stopLossPercent, setStopLossPersent] = useState(0.37);
     const [limitPrice, setLimitPrice] = useState(0);
 
-    async function handleLoadTicker(){
+    async function handleLoadTicker(ticker){
+        if( ticker == undefined || ticker == ''){
+            console.error("The ticker cannot be undefined or empty!");
+            return;
+        }
+
         if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
             return;
 
@@ -165,12 +170,12 @@ export default function TradePanel() {
                 <InputField type="number" value={capInDealPercent} onChange={(e) => setCapInDealPersent(e.target.value)} label="Margin, %"/>
                 {/* <InfoField label="Margin" text={dealCapital.toString()}/> */}
                 <hr/>
-                <InputField value={ticker} onChange={(e) => setTicker(e.target.value)} onBlur={handleLoadTicker} label="Ticker"/>
+                <InputField value={ticker} onChange={(e) => setTicker(e.target.value)} onBlur={(e) => handleLoadTicker(e.target.value)} label="Ticker"/>
                 <div className={Styles.historyButtonsArray}>
-                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCUSDT"); handleLoadTicker()}}>BTCUSDT</button>
-                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCPERP"); handleLoadTicker()}}>BTCPERP</button>
-                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHUSDT"); handleLoadTicker()}}>ETHUSDT</button>
-                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHPERP"); handleLoadTicker()}}>ETHPERP</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCUSDT"); handleLoadTicker("BTCUSDT")}}>BTCUSDT</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCPERP"); handleLoadTicker("BTCPERP")}}>BTCPERP</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHUSDT"); handleLoadTicker("ETHUSDT")}}>ETHUSDT</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHPERP"); handleLoadTicker("ETHPERP")}}>ETHPERP</button>
                 </div>
                 {/* {tickerCurrentPricing?.markPrice && <InfoField label="Cur Price" text={`${tickerCurrentPricing?.markPrice} ${tickerInfo?.quoteCoin}`}/>} */}
                 {isAdvancedMode && <>
