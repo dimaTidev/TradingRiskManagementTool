@@ -19,7 +19,7 @@ export default function TradePanel() {
 
     // const [isLimitOrder, setLimitOrder] = useState(true);
 
-    const [ticker, setTicker] = useState('BTCUSDT');
+    const [ticker, setTicker] = useState('');
     const [tickerInfo, setTickerInfo] = useState({});
     const [tickerCurrentPricing, setTickerCurrentPricing] = useState(0);
     const [capital, setCapital] = useState(100);
@@ -28,21 +28,17 @@ export default function TradePanel() {
     const [stopLossPercent, setStopLossPersent] = useState(0.37);
     const [limitPrice, setLimitPrice] = useState(0);
 
-    useEffect(() => {
+    async function handleLoadTicker(){
         if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
             return;
 
-        const tickerInfo = async () => {
-            const responceTicker = await platformAPIContext.getTickerInfo(ticker);
-            const responceTickerPrice = await platformAPIContext.getTickerPricing(ticker);
+        const responceTicker = await platformAPIContext.getTickerInfo(ticker);
+        const responceTickerPrice = await platformAPIContext.getTickerPricing(ticker);
 
-            setTickerInfo(responceTicker);
-            setTickerCurrentPricing(responceTickerPrice);
-            setLimitPrice(responceTickerPrice.markPrice);
-        };
-        tickerInfo();
-
-    }, [ticker])
+        setTickerInfo(responceTicker);
+        setTickerCurrentPricing(responceTickerPrice);
+        setLimitPrice(responceTickerPrice.markPrice);
+    }
     
     const riskCapital = capital * (targetRisk / 100);
     const dealCapital = capital * (capInDealPercent / 100);
@@ -81,7 +77,6 @@ export default function TradePanel() {
 
         console.log("priceStopLossSwing", priceStopLossSwing);
         
-
         const takeProfitPrice = roundNumber(assetPrice + priceStopLossSwing * 2, 1);
         const stopLossPrice = roundNumber(assetPrice - priceStopLossSwing, 1);
 
@@ -139,6 +134,17 @@ export default function TradePanel() {
         platformAPIContext.placeShortOrder(orderParams);
     }
 
+    const disabledButtons = ticker == "" ? 'disabled' : "" || Number.parseFloat(stopLossPercent) < 0.05;
+    let warningDisableMessage = "";
+
+    if(ticker == ""){
+        warningDisableMessage += "The ticker should be selected";
+    }
+
+    if(Number.parseFloat(stopLossPercent) < 0.05){
+        warningDisableMessage += "\nStop loss percent should be more than 0.05";
+    }
+
     return (
         <div className={Styles.panel}>
             <div className={Styles.header}>
@@ -159,7 +165,13 @@ export default function TradePanel() {
                 <InputField type="number" value={capInDealPercent} onChange={(e) => setCapInDealPersent(e.target.value)} label="Margin, %"/>
                 {/* <InfoField label="Margin" text={dealCapital.toString()}/> */}
                 <hr/>
-                <InputField defaultValue={ticker} onBlur={(e) => setTicker(e.target.value)} label="Ticker"/>
+                <InputField value={ticker} onChange={(e) => setTicker(e.target.value)} onBlur={handleLoadTicker} label="Ticker"/>
+                <div className={Styles.historyButtonsArray}>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCUSDT"); handleLoadTicker()}}>BTCUSDT</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCPERP"); handleLoadTicker()}}>BTCPERP</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHUSDT"); handleLoadTicker()}}>ETHUSDT</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHPERP"); handleLoadTicker()}}>ETHPERP</button>
+                </div>
                 {/* {tickerCurrentPricing?.markPrice && <InfoField label="Cur Price" text={`${tickerCurrentPricing?.markPrice} ${tickerInfo?.quoteCoin}`}/>} */}
                 {isAdvancedMode && <>
                     {tickerInfo?.minOrderQty && <InfoField label="MinOrderQty" text={`${tickerInfo?.minOrderQty} ${tickerInfo?.baseCoin}`}/>}
@@ -170,18 +182,31 @@ export default function TradePanel() {
                 
                 {tickerInfo && tickerInfo.errorMsg && <div>{tickerInfo.errorMsg}</div>}
                 <hr/>
-                <InputField type="number" value={limitPrice} onChange={(e) => setLimitPrice(e.target.value)} label="Limit price"/>
-                <ActionButton onClick={
-                    async () => {
-                        try {
-                            const result = await getTickerPricing(ticker);
-                            setLimitPrice(result.markPrice);
-                        } catch (error) {
-                            console.error(error);
+                <div style={{display: "flex", flexDirection: "row", gap: "6px"}}>
+                    <InputField type="number" value={limitPrice} onChange={(e) => setLimitPrice(e.target.value)} label="Limit price"/>
+                    <button className={Styles.historyButton} onClick={
+                        async () => {
+                            try {
+                                const result = await getTickerPricing(ticker);
+                                setLimitPrice(result.markPrice);
+                            } catch (error) {
+                                console.error(error);
+                            }
                         }
-                    }
-                }>Last price</ActionButton>
+                    }>Last price</button>
+                </div>
                 <InputField type="number" value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} label="StopLoss, %"/>
+                <div className={Styles.historyButtonsArray}>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.1)}>0.1</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.15)}>0.15</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.20)}>0.20</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.25)}>0.25</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.30)}>0.30</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.35)}>0.35</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.40)}>0.40</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.45)}>0.45</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.50)}>0.50</button>
+                </div>
                 <hr/>
                 <InfoField label="Leverage, x" text={leverage.toString()}/>
                 <InfoField label="Volume" text={volume.toString()}/>
@@ -195,15 +220,18 @@ export default function TradePanel() {
 
                 <hr/>
                 <div className={Styles.buttons}>
-                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Limit")}>Long Limit</ActionButton>
-                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Limit")}>Short Limit</ActionButton>
+                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Limit")} disabled={disabledButtons}>Long Limit</ActionButton>
+                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Limit")} disabled={disabledButtons}>Short Limit</ActionButton>
                 </div>
 
                 <hr/>
                 <div className={Styles.buttons}>
-                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Market")}>Long Market</ActionButton>
-                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Market")}>Short Market</ActionButton>
+                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Market")} disabled={disabledButtons}>Long Market</ActionButton>
+                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Market")} disabled={disabledButtons}>Short Market</ActionButton>
                 </div>
+
+                {disabledButtons && <div className={Styles.warnText}>{warningDisableMessage}</div>}
+                
             </>}
 
             {!platformAPIContext.CheckCredentialsAndPasswordSaved() && <APICredentialsSettings/>}

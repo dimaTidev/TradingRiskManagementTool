@@ -142,3 +142,30 @@
     border-radius: 6px;
     padding: 6px;
 }
+
+
+.historyButtonsArray{
+    composes: margin;
+
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.historyButton{
+    /* all: unset; */
+    background-color: var(--button-default-background-color-disabled);
+    padding: 4px;
+    color: var(--text-color-secondary);
+    
+    border: 1px solid var(--background-border-color);
+    border-radius: 3px;
+}
+
+.historyButton:hover{
+    background-color: var(--button-default-background-color-hover);
+}
+
+.historyButton:active{
+    background-color: var(--button-default-background-color-active);
+}
