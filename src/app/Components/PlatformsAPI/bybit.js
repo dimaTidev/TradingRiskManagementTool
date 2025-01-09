@@ -1,8 +1,5 @@
 const { RestClientV5 } = require('bybit-api');
 
-const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-const apiSecret = process.env.NEXT_PUBLIC_API_SECRET;
-
 let client;
 
 export async function createClient(apiKey, apiSecret, demoTrading){
