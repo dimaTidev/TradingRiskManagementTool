@@ -1,0 +1,1 @@
+Contains themes, palette, variables and global styles and utility classes

@@ -1,0 +1,62 @@
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-foreground-200: #28292B;
+        --color-foreground-300: #38393B;
+        --color-foreground-400: #444444;
+        --color-foreground-500: #545454;
+        --color-foreground-600: #646464;
+        --color-foreground-700: #747474;
+        --color-foreground-800: #848484;
+        --color-foreground-1000: #BBBBBB;
+        --color-foreground-1200: #FFFFFF;
+
+        --color-background: #141516;
+        --color-background-secondary: #1E1F21;
+
+        --color-primary: #0C8CE9; /* #314bd4 */
+        --color-primary-hover: #0A6DC2;
+        --color-primary-pressed: #0965B3;
+        --color-primary-secondary: #105CAD;
+        --color-primary-tertiary: #394360;
+
+        --color-error: #ff596c;
+        --color-warning: #f4a62c;
+        --color-success: #52bd52;
+
+        --color-shadow: rgba(0, 0, 0, 0.6);
+
+
+        
+        /* !!! Obsolete !!! */
+        --color-border: #444444;
+        /* !!! Obsolete !!! */
+        --color-border-secondary: #525252;
+        /* !!! Obsolete !!! */
+        --color-border-quinary: #e0e0e0;
+
+        /* !!! Obsolete !!! */
+        --color-border-focus: #0C8CE9;
+
+        /* !!! Obsolete: use --color-foreground-300 instead !!! */
+        --color-foreground: #38393B;
+        /* !!! Obsolete: use --text-color instead !!! */
+        --color-text: #FFFFFF;
+        /* !!! Obsolete: use --text-color-secondary instead !!! */
+        --color-text-secondary: #BBBBBB;
+    }
+}
+
+/* 
+primary
+secondary
+tertiary
+quaternary
+quinary
+senary
+septenary
+octonary
+nonary
+denary
+undecary
+duodecary 
+*/

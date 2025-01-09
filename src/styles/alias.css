@@ -1,0 +1,85 @@
+:root{
+    --text-color: var(--color-foreground-1200);
+    --text-color-secondary: var(--color-foreground-1000);
+    --text-color-tertiary: var(--color-foreground-800);
+
+    /* Backgrounds */ 
+    --background-color: var(--color-background);
+    --background-color-secondary: var(--color-background-secondary);
+
+     /* Borders */ 
+    --background-border-color: var(--color-foreground-400);
+    --background-border-color-secondary: var(--color-foreground-200); /*TBD*/
+
+    /* Default button */
+    --button-default-background-color: var(--color-foreground-300);
+    --button-default-background-color-hover: var(--color-foreground-400);
+    --button-default-background-color-active: var(--color-foreground-500);
+    --button-default-background-color-disabled: var(--color-foreground-200);
+
+    --button-default-border-color: var(--color-foreground-500);
+    --button-default-border-color-hover: var(--color-foreground-600);
+    --button-default-border-color-active: var(--color-foreground-700);
+    --button-default-border-color-disabled: var(--color-foreground-400);
+
+    --button-default-content-color: var(--color-foreground-1200);
+    --button-default-content-color-hover: var(--color-foreground-1200);
+    --button-default-content-color-active: var(--color-foreground-1200);
+    --button-default-content-color-disabled: var(--color-foreground-400);
+
+    /* Primary button */
+    --button-primary-background-color: var(--color-primary);
+    --button-primary-background-color-hover: var(--color-primary-hover);
+    --button-primary-background-color-active: var(--color-primary-pressed);
+    --button-primary-background-color-disabled: var(--color-primary-tertiary);
+
+    --button-primary-border-color: var(--color-primary);
+    --button-primary-border-color-hover: var(--color-primary-hover);
+    --button-primary-border-color-active: var(--color-primary-pressed);
+    --button-primary-border-color-disabled: var(--color-primary-tertiary);
+
+    --button-primary-content-color: var(--color-foreground-1200);
+    --button-primary-content-color-hover: var(--color-foreground-1200);
+    --button-primary-content-color-active: var(--color-foreground-1200);
+    --button-primary-content-color-disabled: var(--color-foreground-800);
+
+    /* Secondary button */
+    --button-secondary-background-color: transparent;
+    --button-secondary-background-color-hover: var(--color-foreground-300);
+    --button-secondary-background-color-active: var(--color-foreground-400);
+    --button-secondary-background-color-disabled: transparent;
+
+    --button-secondary-border-color: var(--color-foreground-1200);
+    --button-secondary-border-color-hover: var(--color-foreground-1200);
+    --button-secondary-border-color-active: var(--color-foreground-1200);
+    --button-secondary-border-color-disabled: var(--color-foreground-700);
+
+    --button-secondary-content-color: var(--color-foreground-1200);
+    --button-secondary-content-color-hover: var(--color-foreground-1200);
+    --button-secondary-content-color-active: var(--color-foreground-1200);
+    --button-secondary-content-color-disabled: var(--color-foreground-700);
+
+
+    /*---------------------- Sizes ---------------------- */
+    /* --text-size-xs: 0.75rem; */
+    --text-size-s: 0.675rem;
+    --text-size-base: 0.875rem;
+    --text-size-m: 1rem;
+    --text-size-l: 1.25rem;
+    --text-size-xl: 2rem;
+
+
+/*---------------------- Border radius ---------------------- */
+    --border-radius-s: 0.325rem;
+    --border-radius-base: 0.5rem; /* buttons */
+    --border-radius-m: 1rem; /* cards, login, register, ... */
+
+    /*---------------------- Line heights ---------------------- */
+    --line-height-base: 1.5;
+    --line-height-s: 1.2; 
+    /* --line-height-xs: 1;  */
+ 
+    --navbar-footer-padding-left-right: 3rem;
+
+    --side-navbar-width: 275px;
+}
