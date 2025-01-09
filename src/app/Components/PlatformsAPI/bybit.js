@@ -37,14 +37,14 @@ export function deleteClient(){
 // }
 
 export async function submitOrder(symbol, side, orderType, qty, leverage, price, takeProfit, stopLoss){
-    symbol = symbol.toString();
-    side = side.toString();
-    orderType = orderType.toString();
-    qty = qty.toString();
-    leverage = leverage.toString();
-    price = price.toString();
-    takeProfit = takeProfit.toString();
-    stopLoss = stopLoss.toString();
+    symbol = symbol?.toString();
+    side = side?.toString();
+    orderType = orderType?.toString();
+    qty = qty?.toString();
+    leverage = leverage?.toString();
+    price = price?.toString();
+    takeProfit = takeProfit?.toString();
+    stopLoss = stopLoss?.toString();
 
     // console.log("symbol", symbol);
     // console.log("side", side);

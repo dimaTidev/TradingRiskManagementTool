@@ -9,6 +9,7 @@ import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
 import ToggleField from './toggleField';
 import { PlatformAPIContext } from './platformAPIContext';
 import { calculateRiskOrder, roundNumber } from './tradeUtils';
+import { getTickerPricing } from './PlatformsAPI/bybit';
 
 export default function TradePanel() {
     const platformAPIContext = useContext(PlatformAPIContext);
@@ -61,11 +62,16 @@ export default function TradePanel() {
     // const dealRiskPersent = dealRisk/capital * 100;
     const dealRiskPersent = roundNumber((dealRisk/capital) * 100, 5);
 
-    async function submitLongOrder(){
+    async function submitLongOrder(orderType){
+
+        let assetPrice = roundNumber(Number.parseFloat(limitPrice), 1);//tickerCurrentPricing?.markPrice;
+
+        if(orderType == "Market"){
+            const res = await getTickerPricing(ticker);
+            assetPrice = Number.parseFloat(res.markPrice);
+        }
         // const ticketPricing = await getTickerPrice(ticker);
         // TODO: if retreiving the ticker price is failed then show a red message!!!
-
-        const assetPrice = roundNumber(Number.parseFloat(limitPrice), 1);//tickerCurrentPricing?.markPrice;
 
         const calcResult = calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPercent, assetPrice, tickerInfo?.minOrderQty, tickerInfo?.qtyStep);
 
@@ -79,12 +85,13 @@ export default function TradePanel() {
         const takeProfitPrice = roundNumber(assetPrice + priceStopLossSwing * 2, 1);
         const stopLossPrice = roundNumber(assetPrice - priceStopLossSwing, 1);
 
+        console.log("assetPrice", assetPrice);
         console.log("takeProfitPrice", takeProfitPrice);
         console.log("stopLossPrice", stopLossPrice);
         
         const orderParams = {
             ticker: ticker,
-            orderType: "Limit",
+            orderType: orderType,
             assetVolume: calcResult.finalAssetVolume,
             leverage: calcResult.finalLeverage,
             orderPrice: assetPrice,
@@ -95,9 +102,14 @@ export default function TradePanel() {
         platformAPIContext.placeLongOrder(orderParams);
     }
 
-    async function submitShortOrder(){
+    async function submitShortOrder(orderType){
         // TODO: change the price if we place the market order
-        const assetPrice = roundNumber(Number.parseFloat(limitPrice), 1);//tickerCurrentPricing?.markPrice;
+        let assetPrice = roundNumber(Number.parseFloat(limitPrice), 1);//tickerCurrentPricing?.markPrice;
+
+        if(orderType == "Market"){
+            const res = await getTickerPricing(ticker);
+            assetPrice = Number.parseFloat(res.markPrice);
+        }
 
         const calcResult = calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLossPercent, assetPrice, tickerInfo?.minOrderQty, tickerInfo?.qtyStep);
 
@@ -110,12 +122,13 @@ export default function TradePanel() {
         const takeProfitPrice = roundNumber(assetPrice - priceStopLossSwing * 2, 1);
         const stopLossPrice = roundNumber(assetPrice + priceStopLossSwing, 1);
 
+        console.log("assetPrice", assetPrice);
         console.log("takeProfitPrice", takeProfitPrice);
         console.log("stopLossPrice", stopLossPrice);
         
         const orderParams = {
             ticker: ticker,
-            orderType: "Limit",
+            orderType: orderType,
             assetVolume: calcResult.finalAssetVolume,
             leverage: calcResult.finalLeverage,
             orderPrice: assetPrice,
@@ -152,7 +165,17 @@ export default function TradePanel() {
             
             {tickerInfo && tickerInfo.errorMsg && <div>{tickerInfo.errorMsg}</div>}
             <hr/>
-            <InputField type="number" defaultValue={limitPrice} onChange={(e) => setLimitPrice(e.target.value)} label="Limit price"/>
+            <InputField type="number" value={limitPrice} onChange={(e) => setLimitPrice(e.target.value)} label="Limit price"/>
+            <ActionButton onClick={
+                async () => {
+                    try {
+                        const result = await getTickerPricing(ticker);
+                        setLimitPrice(result.markPrice);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+            }>Last price</ActionButton>
             <InputField type="number" value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} label="StopLoss, %"/>
             <hr/>
             <InfoField label="Leverage, x" text={leverage.toString()}/>
@@ -167,8 +190,14 @@ export default function TradePanel() {
 
             <hr/>
             <div className={Styles.buttons}>
-                <ActionButton variant={Variant.Default} onClick={submitLongOrder}>Long</ActionButton>
-                <ActionButton variant={Variant.Default} onClick={submitShortOrder}>Short</ActionButton>
+                <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Limit")}>Long Limit</ActionButton>
+                <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Limit")}>Short Limit</ActionButton>
+            </div>
+
+            <hr/>
+            <div className={Styles.buttons}>
+                <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Market")}>Long Market</ActionButton>
+                <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Market")}>Short Market</ActionButton>
             </div>
 
             {openSettings && <Settings onClose={() => setOpenSettings(false)} isAdvancedMode={isAdvancedMode} setAdvancedMode={setAdvancedMode}/>}
