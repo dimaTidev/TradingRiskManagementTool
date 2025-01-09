@@ -27,7 +27,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     const [isInitialized, setInitialized] = useState(false);
     const [apiKey, setapiKey] = useState(localStorage.getItem(bybitAPIKeyStorageKey));
     const [apiSecret, setapiSecret] = useState(localStorage.getItem(bybitAPISecretStorageKey));
-    const [passkey, setPassKey] = useState(undefined);
+    const [passkey, setPassKey] = useState(decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey)));
 
     useEffect(() => {
         setInitialized(false);
@@ -148,7 +148,8 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     }
 
     function handleSetPassword(passkey){
-        setPassKey(passkey);   
+        setPassKey(passkey);
+        sessionStorage.setItem(bybitAPIPassKey, encryptData("passkey", passkey));  
     }
 
     return (
