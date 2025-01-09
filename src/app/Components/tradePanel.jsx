@@ -145,7 +145,7 @@ export default function TradePanel() {
                 <a className={Styles.headerFont}>Bybit</a>
                 {platformAPIContext.isDemoTrading && <a className={Styles.warnText}>Demo trading</a>}
                 {platformAPIContext.CheckCredentialsAndPasswordSaved() && <>
-                    <ButtonIcon src="next.svg" size={Size.L} onClick={() => setOpenSettings(true)}>Settings {openSettings}</ButtonIcon>
+                    <ButtonIcon src="settings.svg" quiet={true} size={Size.L} onClick={() => setOpenSettings(true)}>Settings {openSettings}</ButtonIcon>
                     {openSettings && <Settings onClose={() => setOpenSettings(false)} isAdvancedMode={isAdvancedMode} setAdvancedMode={setAdvancedMode}/>}
                 </>}
             </div>
@@ -217,7 +217,7 @@ function Settings({onClose, isAdvancedMode, setAdvancedMode}) {
         <div className={Styles.panel} onClick={(e) => e.stopPropagation()}>
             <div className={Styles.header}>
                 <a className={Styles.headerFont}>Settings</a>
-                <ButtonIcon src="next.svg" size={Size.L} onClick={onClose}>X</ButtonIcon>
+                <ButtonIcon src="close.svg" quiet={true} size={Size.L} onClick={onClose}/>
             </div>
             <hr/>
 
