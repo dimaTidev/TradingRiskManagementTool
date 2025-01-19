@@ -24,6 +24,8 @@ const bybitAPIKeyStorageKey = "qGN5KuuVNg9sJQl";
 const bybitAPISecretStorageKey = "IHzJQlbNOs+Y5sfiuuVNg9f";
 const bybitAPIPassKey = "dghk58fjo38jf2";
 
+
+
 export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
@@ -240,3 +242,24 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         </PlatformAPIContext.Provider>
     )
 };
+
+
+
+export function TestPlatfomAPIContextProvider({ children }) {
+    return (
+        <PlatformAPIContext.Provider value={{
+            setAPICredentials: (params) => console.log("setAPICredentials", params),
+            placeShortOrder: (params) => console.log("placeShortOrder", params),
+            placeLongOrder: (params) => console.log("placeLongOrder", params),
+            getTickerInfo: (params) => console.log("getTickerInfo", params),
+            getTickerPricing: (params) => console.log("getTickerPricing", params),
+            CheckCredentialsSaved: () => true,
+            CheckCredentialsAndPasswordSaved: () => true,
+            deleteCredentials: (params) => console.log("deleteCredentials", params),
+            setPassword: (params) => console.log("setPassword", params),
+            isDemoTrading: () => true
+        }}>
+            {children}
+        </PlatformAPIContext.Provider>
+    )
+}

@@ -8,7 +8,8 @@ export async function createClient(apiKey, apiSecret, demoTrading){
         key: apiKey,
         secret: apiSecret,
         parseAPIRateLimits: true,
-        demoTrading: demoTrading
+        demoTrading: demoTrading,
+        // adjustForTimeDifference: true
     });
 }
 

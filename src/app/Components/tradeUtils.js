@@ -35,3 +35,49 @@ export function calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLo
         finalMargin
     }
 }
+
+// TODO: complete!
+export function calculateRiskOrderSimple(capital, targetRisk, leverage, stopLossPercent, price, minAssetQty, assetQtyStep){
+    const riskCapital = capital * (targetRisk / 100);
+
+    const marginInDeal = roundNumber(riskCapital / (stopLossPercent / 100) / leverage);
+    const volume = roundNumber(marginInDeal * leverage);
+
+    const stopLossPrice = price - price * stopLossPercent;
+
+    // TODO: take into account the minAssetQty and assetQtyStep
+    const assetVolume = 0.001;
+
+    return{
+        leverage,
+        volume,
+        marginInDeal,
+        assetVolume,
+        stopLossPrice
+    }
+}
+
+/**
+ * @param {Number} price 
+ * @param {Number} stopLossPercent 
+ * @param {Number} takeProfitRR 
+ * @param {"Long"|"Short"} orderDirection 
+ * @returns 
+ */
+export function calculateTakeProfitPrice(price, stopLossPercent, takeProfitRR, orderDirection){
+    const slDelta = price * stopLossPercent;
+    const tpDelta = slDelta * takeProfitRR;
+    return orderDirection == "Long" ? price + tpDelta : price - tpDelta;
+}
+
+/**
+ * @param {Number} price 
+ * @param {Number} stopLossPercent 
+ * @param {"Long"|"Short"} orderDirection 
+ * @returns 
+ */
+export function calculateStopLossPrice(price, stopLossPercent, orderDirection){
+    const slDelta = price * stopLossPercent;
+
+    return orderDirection == "Long" ? price - slDelta : price + slDelta;
+}

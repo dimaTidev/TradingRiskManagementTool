@@ -1,0 +1,45 @@
+.margin{
+    margin-left: 16px;
+    margin-right: 16px;
+}
+
+.panel{
+    background-color: var(--background-color-secondary);
+
+    border-radius: 8px;
+    border: 1px solid var(--background-border-color);
+
+    width: 420px;
+    min-height: 100px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    align-items: stretch;
+
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.header{
+    composes: margin;
+
+    min-height: 30px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.body{
+    composes: margin;
+    
+    min-height: 30px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+}
