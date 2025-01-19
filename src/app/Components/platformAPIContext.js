@@ -7,7 +7,27 @@ import { decryptData, encryptData } from '@/lib/encryption/EncryptionController'
 // Create a context and use it within the component
 export const PlatformAPIContext = React.createContext({
     setAPICredentials(apiKey, apiSecret, password){},
+    /**
+     * @param {Object} params 
+     * @param {string} params.ticker 
+     * @param {string} params.orderType 
+     * @param {Number} params.assetVolume 
+     * @param {Number} params.leverage 
+     * @param {Number} params.orderPrice 
+     * @param {Number} params.takeProfitPrice 
+     * @param {Number} params.stopLossPrice 
+     */
     placeShortOrder(params){},
+    /**
+     * @param {Object} params 
+     * @param {string} params.ticker 
+     * @param {string} params.orderType 
+     * @param {Number} params.assetVolume 
+     * @param {Number} params.leverage 
+     * @param {Number} params.orderPrice 
+     * @param {Number} params.takeProfitPrice 
+     * @param {Number} params.stopLossPrice 
+     */
     placeLongOrder(params){},
     getTickerInfo(ticker){}, 
     getTickerPricing(ticker){},

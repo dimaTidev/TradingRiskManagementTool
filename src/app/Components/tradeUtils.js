@@ -36,24 +36,80 @@ export function calculateRiskOrder(capital, targetRisk, capInDealPercent, stopLo
     }
 }
 
+/**
+ * @typedef {Object} RiskOrder
+ * @property {number} leverage - The leverage multiplier used.
+ * @property {number} volume - The corrected trading volume based on constraints.
+ * @property {number} incorrectVolume - The initially calculated (but potentially incorrect) trading volume.
+ * @property {number} marginInDeal - The corrected margin required for the deal.
+ * @property {number} assetVolume - The volume of the asset to trade.
+ * @property {number} stopLossPriceLong - The stop-loss price for a long position.
+ * @property {number} stopLossPriceShort - The stop-loss price for a short position.
+ * @property {number} takeProfitPriceLong - The take-profit price for a long position.
+ * @property {number} takeProfitPriceShort - The take-profit price for a short position.
+ * @property {number} price - The current price of the asset.
+ * @property {number} riskPercent - The risk percentage of the trade based on capital.
+ * @property {number} risk - The absolute risk amount in capital terms.
+ */
+
 // TODO: complete!
-export function calculateRiskOrderSimple(capital, targetRisk, leverage, stopLossPercent, price, minAssetQty, assetQtyStep){
+/**
+ * Calculates parameters for a risk-managed trading order.
+ * @param {number} capital - Total capital available for trading.
+ * @param {number} targetRisk - Target risk percentage per trade.
+ * @param {number} leverage - Leverage multiplier for the trade.
+ * @param {number} stopLossPercent - Percentage of price for stop loss.
+ * @param {number} price - Current price of the asset.
+ * @param {number} minAssetQty - Minimum quantity of the asset to trade.
+ * @param {number} assetQtyStep - Step size for trading quantity adjustments.
+ * @returns {RiskOrder} An object containing calculated trading parameters.
+ */
+export function calculateRiskOrderSimple(capital, targetRisk, leverage, stopLossPercent, price, minAssetQty, assetQtyStep, takeProfitRR){
+    capital = Number.parseFloat(capital);
+    targetRisk = Number.parseFloat(targetRisk);
+    leverage = Number.parseFloat(leverage);
+    price = Number.parseFloat(price);
+    minAssetQty = Number.parseFloat(minAssetQty);
+    assetQtyStep = Number.parseFloat(assetQtyStep);
+    takeProfitRR = Number.parseFloat(takeProfitRR);
+
+
     const riskCapital = capital * (targetRisk / 100);
 
     const marginInDeal = roundNumber(riskCapital / (stopLossPercent / 100) / leverage);
     const volume = roundNumber(marginInDeal * leverage);
 
-    const stopLossPrice = price - price * stopLossPercent;
+    const stopLossPriceLong = price - price * (stopLossPercent / 100);
+    const stopLossPriceShort = price + price * (stopLossPercent / 100);
 
+    const takeProfitPriceLong = price + price * (stopLossPercent / 100) * takeProfitRR;
+    const takeProfitPriceShort = price - price * (stopLossPercent / 100) * takeProfitRR;
+
+    minAssetQty = 0.001;
+    assetQtyStep = 0.001;
+
+    /// assetQtyStep
+    
     // TODO: take into account the minAssetQty and assetQtyStep
-    const assetVolume = 0.001;
+    // const assetVolume = Math.max(minAssetQty, Math.floor((volume / price - minAssetQty)));// * assetQtyStep + minAssetQty;
+    const assetVolume = Math.floor(((volume / price - minAssetQty) / assetQtyStep)) * assetQtyStep + minAssetQty;
+
+    const actualVolume = assetVolume * price;
+    const actualMargin = actualVolume / leverage;
 
     return{
         leverage,
-        volume,
-        marginInDeal,
+        volume: actualVolume,
+        incorrectVolume: volume,
+        marginInDeal: actualMargin,
         assetVolume,
-        stopLossPrice
+        stopLossPriceLong,
+        stopLossPriceShort,
+        takeProfitPriceLong,
+        takeProfitPriceShort,
+        price,
+        riskPercent: actualVolume * (stopLossPercent / 100) / capital * 100,
+        risk: actualVolume * (stopLossPercent / 100)
     }
 }
 

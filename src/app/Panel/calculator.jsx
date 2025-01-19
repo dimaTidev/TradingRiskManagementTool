@@ -4,13 +4,13 @@ import React, { useState } from 'react'
 import LabeledField from "./labeledField";
 import { calculateRiskOrderSimple, calculateTakeProfitPrice, roundNumber } from "../Components/tradeUtils";
 
-export const WorflowEditor = React.forwardRef(function WorflowEditor({style, workflowJson}, ref) {
+// export const WorflowEditor = React.forwardRef(function WorflowEditor({style, workflowJson}, ref) {
 
-    React.useImperativeHandle(ref, () => ({
-        getWorkflowJson: () => workflowContextRef.current?.getWorkflowJson(),
-        setWorkflowJson,
-    }));
-});
+//     React.useImperativeHandle(ref, () => ({
+//         getWorkflowJson: () => workflowContextRef.current?.getWorkflowJson(),
+//         setWorkflowJson,
+//     }));
+// });
 
 const Calculator = React.forwardRef(function Calculator(params, ref)  {
     const [ticker, setTicker] = useState('BTCUSDT');
@@ -108,25 +108,25 @@ const Calculator = React.forwardRef(function Calculator(params, ref)  {
 
 
             <div className={Styles.rightSide}>
-            <div className={Styles.subInfoContainer}>
-                    <a>Ticker info</a>
-                    <hr/>
-                    <HorizontalInfo label="Ticker" value="value"/>
-                    <HorizontalInfo label="Max Leverage" value="value"/>
-                    <HorizontalInfo label="Min qty" value="value"/>
-                    <HorizontalInfo label="Qty step" value="value"/>
-            </div>
+                <div className={Styles.subInfoContainer}>
+                        <a>Ticker info</a>
+                        <hr/>
+                        <HorizontalInfo label="Ticker" value="value"/>
+                        <HorizontalInfo label="Max Leverage" value="value"/>
+                        <HorizontalInfo label="Min qty" value="value"/>
+                        <HorizontalInfo label="Qty step" value="value"/>
+                </div>
 
-            <div className={Styles.subInfoContainer}>
-                    <a>Calculation results</a>
-                    <hr/>
-                    <HorizontalInfo label="Leverage" value={results.leverage}/>
-                    <HorizontalInfo label="Volume" value={results.volume}/>
-                    <HorizontalInfo label="Asset vol" value={results.assetVolume}/>
-                    <HorizontalInfo label="Margin" value={results.marginInDeal}/>
-                    <HorizontalInfo label="Risk" value={roundNumber(results.volume * (stopLossPercent / 100))}/>
-                    <HorizontalInfo label="Risk, %" value={roundNumber(results.volume * (stopLossPercent / 100) / capital) * 100}/>
-            </div>
+                <div className={Styles.subInfoContainer}>
+                        <a>Calculation results</a>
+                        <hr/>
+                        <HorizontalInfo label="Leverage" value={results.leverage}/>
+                        <HorizontalInfo label="Volume" value={results.volume}/>
+                        <HorizontalInfo label="Asset vol" value={results.assetVolume}/>
+                        <HorizontalInfo label="Margin" value={results.marginInDeal}/>
+                        <HorizontalInfo label="Risk" value={roundNumber(results.volume * (stopLossPercent / 100))}/>
+                        <HorizontalInfo label="Risk, %" value={roundNumber(results.volume * (stopLossPercent / 100) / capital) * 100}/>
+                </div>
             </div>
         </div>
     )
