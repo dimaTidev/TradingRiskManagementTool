@@ -136,22 +136,27 @@ export default function TradePanelBybit() {
     <>
       { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
         <Panel headerTitle="Bybit" headerContent={<ButtonIcon src="settings.svg" quiet={true} size={Size.L} onClick={() => setOpenSettings((s) => !s)}/>}>
-          <div className={Styles.base}>
-            <Inputs ref={inputDataRef} className={Styles.leftSide} onChange={() => setInputData(inputDataRef.current?.getInputData())} onTickerChanged={(t) => setTicker(t)}/>
-            <div className={Styles.rightSide}>
-              <TickerInfo {...tickerInfoData}/>
-              <OrderCalculationInfo {...orderData}/>
-            </div>
-            
-          </div>
-          
-          <hr/>
-          <OrderButtons 
-            longLimitOrderCallback={handlePlaceLongLimitOrder}
-            shortLimitOrderCallback={handlePlaceShortLimitOrder}          
-            longMarketOrderCallback={handlePlaceLongMarketOrderAsync}
-            shortMarketOrderCallback={handlePlaceShortMarketOrderAsync}
-          />
+
+          {!openSettings && (
+            <>
+              <div className={Styles.base}>
+                <Inputs ref={inputDataRef} className={Styles.leftSide} onChange={() => setInputData(inputDataRef.current?.getInputData())} onTickerChanged={(t) => setTicker(t)}/>
+                <div className={Styles.rightSide}>
+                  <TickerInfo {...tickerInfoData}/>
+                  <OrderCalculationInfo {...orderData}/>
+                </div>
+                
+              </div>
+
+              <hr/>
+              <OrderButtons 
+                longLimitOrderCallback={handlePlaceLongLimitOrder}
+                shortLimitOrderCallback={handlePlaceShortLimitOrder}          
+                longMarketOrderCallback={handlePlaceLongMarketOrderAsync}
+                shortMarketOrderCallback={handlePlaceShortMarketOrderAsync}
+              />
+            </>
+          )}
 
           {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
           
