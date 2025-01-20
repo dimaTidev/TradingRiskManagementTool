@@ -12,26 +12,63 @@ import { getTickerPricing } from '../Components/PlatformsAPI/bybit';
 import Settings from './panelSettings';
 import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
 import { APICredentialsSettings } from './creadentials/credentials';
+import TickerInfo from './Info/tickerInfo';
 
 export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
-  const [_, setRedraw] = useReducer(s => s + 1, 0);
+  // const [_, setRedraw] = useReducer(s => s + 1, 0);
   const inputDataRef = useRef();
+  const [inputData, setInputData] = useState({});
+  const [ticker, setTicker] = useState("");
+  const [tickerInfoData, setTickerInfoData] = useState({});
   // const [inputData, setInputData] = useState(second)
 
   const [openSettings, setOpenSettings] = useState(false);
 
   useEffect(() => {
     if (inputDataRef.current) {
-      setRedraw();
+      setInputData(inputDataRef.current?.getInputData());
+      setTicker(inputDataRef.current?.getInputData()?.ticker);
+      // setRedraw();
     }
   }, []);
 
-  const inputData = inputDataRef.current?.getInputData();
+  useEffect(() => {
+    if(ticker != undefined && ticker != ""){
+        const getTicker = async () => {
+          try {
 
-  // TODO: Put arguments minAssetQty, assetQtyStep!
-  const orderData = inputData == undefined ? {} : calculateRiskOrderSimple(inputData.capital, inputData.targetRisk, inputData.leverage, inputData.stopLossPercent, inputData.entryPrice, 0.001, 0.001, inputData.takeProfitRR);
+            if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
+              return;
+
+            const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);
+            console.log("responceTickerInfo", responceTickerInfo);
+            
+            setTickerInfoData(responceTickerInfo);
+
+            console.log("tickerInfo for", ticker, JSON.stringify(responceTickerInfo));
+          } catch (error) {
+              console.error(error);
+          }
+      }
+      
+      getTicker();
+    }
+  }, [ticker]);
+
+  // const inputData = inputDataRef.current?.getInputData();
+
+  const orderData = inputData == undefined ? {} : calculateRiskOrderSimple(
+    inputData.capital, 
+    inputData.targetRisk, 
+    inputData.leverage, 
+    inputData.stopLossPercent, 
+    inputData.entryPrice, 
+    tickerInfoData.minOrderQty, 
+    tickerInfoData.qtyStep, 
+    inputData.takeProfitRR);
   
+  //#region orders
   function handlePlaceLongLimitOrder(){
     const data = {
       ticker: inputData.ticker,
@@ -60,10 +97,9 @@ export default function TradePanelBybit() {
 
   async function handlePlaceLongMarketOrderAsync(){
     const res = await getTickerPricing(inputData.ticker);
-    assetPrice = Number.parseFloat(res.markPrice);
+    const assetPrice = Number.parseFloat(res.markPrice);
 
-      // TODO: Put arguments minAssetQty, assetQtyStep!
-    const orderData = inputData == undefined ? {} : calculateRiskOrderSimple(inputData.capital, inputData.targetRisk, inputData.leverage, inputData.stopLossPercent, assetPrice, 0.001, 0.001, inputData.takeProfitRR);
+    const orderData = inputData == undefined ? {} : calculateRiskOrderSimple(inputData.capital, inputData.targetRisk, inputData.leverage, inputData.stopLossPercent, assetPrice, tickerInfoData.minOrderQty, tickerInfoData.qtyStep, inputData.takeProfitRR);
 
     const data = {
       ticker: inputData.ticker,
@@ -79,11 +115,9 @@ export default function TradePanelBybit() {
 
   async function handlePlaceShortMarketOrderAsync(){
     const res = await getTickerPricing(inputData.ticker);
-    assetPrice = Number.parseFloat(res.markPrice);
-
-      // TODO: Put arguments minAssetQty, assetQtyStep!
-    const orderData = inputData == undefined ? {} : calculateRiskOrderSimple(inputData.capital, inputData.targetRisk, inputData.leverage, inputData.stopLossPercent, assetPrice, 0.001, 0.001, inputData.takeProfitRR);
-
+    const assetPrice = Number.parseFloat(res.markPrice);
+    
+    const orderData = inputData == undefined ? {} : calculateRiskOrderSimple(inputData.capital, inputData.targetRisk, inputData.leverage, inputData.stopLossPercent, assetPrice, tickerInfoData.minOrderQty, tickerInfoData.qtyStep, inputData.takeProfitRR);
 
     const data = {
       ticker: inputData.ticker,
@@ -96,14 +130,16 @@ export default function TradePanelBybit() {
     };
     platformAPIContext.placeShortOrder(data);
   }
+  //#endregion
 
   return (
     <>
       { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
         <Panel headerTitle="Bybit" headerContent={<ButtonIcon src="settings.svg" quiet={true} size={Size.L} onClick={() => setOpenSettings((s) => !s)}/>}>
           <div className={Styles.base}>
-            <Inputs ref={inputDataRef} className={Styles.leftSide} onChange={() => setRedraw()}/>
+            <Inputs ref={inputDataRef} className={Styles.leftSide} onChange={() => setInputData(inputDataRef.current?.getInputData())} onTickerChanged={(t) => setTicker(t)}/>
             <div className={Styles.rightSide}>
+              <TickerInfo {...tickerInfoData}/>
               <OrderCalculationInfo {...orderData}/>
             </div>
             

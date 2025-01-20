@@ -1,6 +1,6 @@
 import React from 'react'
 import Styles from "./infoStyles.module.css";
-import { HorizontalInfo } from './HorizontalInfo';
+import { HorizontalInfo } from './horizontalInfo';
 import { roundNumber } from '@/app/Components/tradeUtils';
 
 /**

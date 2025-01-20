@@ -1,9 +1,11 @@
+'use client';
+
 import React, { useEffect, useState } from 'react'
-import Styles from "./calculator.module.css";
+import Styles from "./tradePanel.module.css";
 import LabeledField from "./labeledField";
 import InputField from '@/lib/UIComponents/InputField';
 
-const Inputs = React.forwardRef(function Inputs(params, ref) {
+const Inputs = React.forwardRef(function Inputs({onTickerChanged, ...params}, ref) {
     const [ticker, setTicker] = useState('BTCUSDT');
     const [capital, setCapital] = useState(100);
     const [targetRisk, setTargetRisk] = useState(1);
@@ -69,8 +71,14 @@ const Inputs = React.forwardRef(function Inputs(params, ref) {
             <hr/>
 
             <LabeledField label="Ticker">
-                <InputField value={ticker} onChange={(e) => setTicker(e.target.value)} placeholder="eg: BTCUSDT"/>
+                <InputField value={ticker} onChange={(e) => setTicker(e.target.value)} onBlur={(e) => onTickerChanged?.(e.target.value)} placeholder="eg: BTCUSDT"/>
             </LabeledField>
+            <div className={Styles.historyButtonsArray}>
+                <button className={Styles.historyButton} onClick={() => {setTicker("BTCUSDT"); onTickerChanged?.("BTCUSDT")}}>BTCUSDT</button>
+                <button className={Styles.historyButton} onClick={() => {setTicker("BTCPERP"); onTickerChanged?.("BTCPERP")}}>BTCPERP</button>
+                <button className={Styles.historyButton} onClick={() => {setTicker("ETHUSDT"); onTickerChanged?.("ETHUSDT")}}>ETHUSDT</button>
+                <button className={Styles.historyButton} onClick={() => {setTicker("ETHPERP"); onTickerChanged?.("ETHPERP")}}>ETHPERP</button>
+            </div>
             
             <LabeledField label="Entry price">
                 <InputField type="number" value={entryPrice} onChange={(e) => setEntryPrice(e.target.value)} placeholder="eg: 96000"/>
@@ -79,6 +87,17 @@ const Inputs = React.forwardRef(function Inputs(params, ref) {
             <LabeledField label="Stop loss, %">
                 <InputField type="number" value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40"/>
             </LabeledField>
+            <div className={Styles.historyButtonsArray}>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.1)}>0.1</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.15)}>0.15</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.20)}>0.20</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.25)}>0.25</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.30)}>0.30</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.35)}>0.35</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.40)}>0.40</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.45)}>0.45</button>
+                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.50)}>0.50</button>
+            </div>
                                     
             <LabeledField label="Take profit, RR">
                 <InputField type="number" value={takeProfitRR} onChange={(e) => setTakeProfitRR(e.target.value)} placeholder="eg: 2"/>

@@ -62,7 +62,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
                 const apiSecret = localStorage.getItem(bybitAPISecretStorageKey);
                 const passKey = decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey));
                 const demoTrading = localStorage.getItem("demoTrading");
-                
+
                 const responce = await checkPassword(apiKey, apiSecret, passKey, demoTrading);
                 if(responce != undefined){
                     setPassKey(undefined);
@@ -118,7 +118,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.stopLossPrice 
      */
     async function handlePlaceShortOrder(params){
-        console.log("place short order");
+        console.log("place short order", params);
         // TODO: add error message handling!
         try {
             submitOrder(
@@ -147,7 +147,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.stopLossPrice 
      */
     async function handlePlaceLongOrder(params){
-        console.log("place long order");
+        console.log("place long order", params);
         // TODO: add error message handling!
         try {
             submitOrder(
@@ -198,6 +198,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     }
 
     async function checkPassword(apiKey, apiSecret, passkey, demoTrading){
+        console.log("checkPassword", passkey, demoTrading);
         // Check the pass key
         if(passkey == undefined || passkey == ""){
             // TODO: throw an error message
@@ -227,6 +228,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
 
         console.log("decodedApiKey", decodedApiKey);
         console.log("decodedApiSecret", decodedApiSecret);
+        console.log("demoTrading", demoTrading);
         
         // Verify credentials
         const responce = await getAccountInfo();
@@ -239,6 +241,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
             setPassKey(passkey);
         }else{
             console.log("Failure");
+            console.log("responce.retMsg", responce.retMsg);
             return responce.retMsg;
         }
 

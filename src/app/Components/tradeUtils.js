@@ -85,14 +85,11 @@ export function calculateRiskOrderSimple(capital, targetRisk, leverage, stopLoss
     const takeProfitPriceLong = price + price * (stopLossPercent / 100) * takeProfitRR;
     const takeProfitPriceShort = price - price * (stopLossPercent / 100) * takeProfitRR;
 
-    minAssetQty = 0.001;
-    assetQtyStep = 0.001;
-
     /// assetQtyStep
     
     // TODO: take into account the minAssetQty and assetQtyStep
     // const assetVolume = Math.max(minAssetQty, Math.floor((volume / price - minAssetQty)));// * assetQtyStep + minAssetQty;
-    const assetVolume = Math.floor(((volume / price - minAssetQty) / assetQtyStep)) * assetQtyStep + minAssetQty;
+    const assetVolume = roundNumber(Math.floor(((volume / price - minAssetQty) / assetQtyStep)) * assetQtyStep + minAssetQty, countDecimalPlaces(assetQtyStep));
 
     const actualVolume = assetVolume * price;
     const actualMargin = actualVolume / leverage;
@@ -136,4 +133,12 @@ export function calculateStopLossPrice(price, stopLossPercent, orderDirection){
     const slDelta = price * stopLossPercent;
 
     return orderDirection == "Long" ? price - slDelta : price + slDelta;
+}
+
+
+export function countDecimalPlaces(num) {
+    if (num == undefined || Math.floor(num) === num) return 0;
+    const split = num.toString().split('.');
+    if(split.length <= 1) return 0;
+    return num.toString().split('.')[1].length || 0;
 }
