@@ -1,0 +1,71 @@
+.base{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: stretch;
+
+    gap: 12px;
+
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+
+.leftSide{
+    /* background-color: gray; */
+    flex-grow: 1;
+
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+
+.rightSide{
+    background-color: var(--background-color);
+    width: 165px;
+    min-height: 300px;
+
+    border: 1px solid var(--background-border-color);
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 16px;
+
+    padding: 12px;
+
+    color: var(--text-color-secondary);
+    font-size: 14px;
+}
+
+
+
+.historyButtonsArray{
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.historyButton{
+    /* all: unset; */
+    background-color: var(--button-default-background-color-disabled);
+    padding: 4px;
+    color: var(--text-color-secondary);
+    
+    border: 1px solid var(--background-border-color);
+    border-radius: 3px;
+}
+
+.historyButton:hover{
+    background-color: var(--button-default-background-color-hover);
+}
+
+.historyButton:active{
+    background-color: var(--button-default-background-color-active);
+}

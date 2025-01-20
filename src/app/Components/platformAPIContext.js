@@ -7,7 +7,27 @@ import { decryptData, encryptData } from '@/lib/encryption/EncryptionController'
 // Create a context and use it within the component
 export const PlatformAPIContext = React.createContext({
     setAPICredentials(apiKey, apiSecret, password){},
+    /**
+     * @param {Object} params 
+     * @param {string} params.ticker 
+     * @param {string} params.orderType 
+     * @param {Number} params.assetVolume 
+     * @param {Number} params.leverage 
+     * @param {Number} params.orderPrice 
+     * @param {Number} params.takeProfitPrice 
+     * @param {Number} params.stopLossPrice 
+     */
     placeShortOrder(params){},
+    /**
+     * @param {Object} params 
+     * @param {string} params.ticker 
+     * @param {string} params.orderType 
+     * @param {Number} params.assetVolume 
+     * @param {Number} params.leverage 
+     * @param {Number} params.orderPrice 
+     * @param {Number} params.takeProfitPrice 
+     * @param {Number} params.stopLossPrice 
+     */
     placeLongOrder(params){},
     getTickerInfo(ticker){}, 
     getTickerPricing(ticker){},
@@ -23,6 +43,8 @@ export const PlatformAPIContext = React.createContext({
 const bybitAPIKeyStorageKey = "qGN5KuuVNg9sJQl";
 const bybitAPISecretStorageKey = "IHzJQlbNOs+Y5sfiuuVNg9f";
 const bybitAPIPassKey = "dghk58fjo38jf2";
+
+
 
 export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
@@ -40,15 +62,15 @@ export function BybitPlatfomAPIContextProvider({ children }) {
                 const apiSecret = localStorage.getItem(bybitAPISecretStorageKey);
                 const passKey = decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey));
                 const demoTrading = localStorage.getItem("demoTrading");
-                
+
                 const responce = await checkPassword(apiKey, apiSecret, passKey, demoTrading);
                 if(responce != undefined){
                     setPassKey(undefined);
+                }else{
+                    setapiKey(apiKey);
+                    setapiSecret(apiSecret);
+                    setDemoTrading(demoTrading);
                 }
-
-                setapiKey(apiKey);
-                setapiSecret(apiSecret);
-                setDemoTrading(demoTrading);
 
             } catch (error) {
                 console.error(error);
@@ -96,7 +118,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.stopLossPrice 
      */
     async function handlePlaceShortOrder(params){
-        console.log("place short order");
+        console.log("place short order", params);
         // TODO: add error message handling!
         try {
             submitOrder(
@@ -125,7 +147,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.stopLossPrice 
      */
     async function handlePlaceLongOrder(params){
-        console.log("place long order");
+        console.log("place long order", params);
         // TODO: add error message handling!
         try {
             submitOrder(
@@ -176,6 +198,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     }
 
     async function checkPassword(apiKey, apiSecret, passkey, demoTrading){
+        console.log("checkPassword", passkey, demoTrading);
         // Check the pass key
         if(passkey == undefined || passkey == ""){
             // TODO: throw an error message
@@ -205,6 +228,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
 
         console.log("decodedApiKey", decodedApiKey);
         console.log("decodedApiSecret", decodedApiSecret);
+        console.log("demoTrading", demoTrading);
         
         // Verify credentials
         const responce = await getAccountInfo();
@@ -217,6 +241,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
             setPassKey(passkey);
         }else{
             console.log("Failure");
+            console.log("responce.retMsg", responce.retMsg);
             return responce.retMsg;
         }
 
@@ -240,3 +265,24 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         </PlatformAPIContext.Provider>
     )
 };
+
+
+
+export function TestPlatfomAPIContextProvider({ children }) {
+    return (
+        <PlatformAPIContext.Provider value={{
+            setAPICredentials: (params) => console.log("setAPICredentials", params),
+            placeShortOrder: (params) => console.log("placeShortOrder", params),
+            placeLongOrder: (params) => console.log("placeLongOrder", params),
+            getTickerInfo: (params) => console.log("getTickerInfo", params),
+            getTickerPricing: (params) => console.log("getTickerPricing", params),
+            CheckCredentialsSaved: () => true,
+            CheckCredentialsAndPasswordSaved: () => true,
+            deleteCredentials: (params) => console.log("deleteCredentials", params),
+            setPassword: (params) => console.log("setPassword", params),
+            isDemoTrading: () => true
+        }}>
+            {children}
+        </PlatformAPIContext.Provider>
+    )
+}
