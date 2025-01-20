@@ -66,11 +66,11 @@ export function BybitPlatfomAPIContextProvider({ children }) {
                 const responce = await checkPassword(apiKey, apiSecret, passKey, demoTrading);
                 if(responce != undefined){
                     setPassKey(undefined);
+                }else{
+                    setapiKey(apiKey);
+                    setapiSecret(apiSecret);
+                    setDemoTrading(demoTrading);
                 }
-
-                setapiKey(apiKey);
-                setapiSecret(apiSecret);
-                setDemoTrading(demoTrading);
 
             } catch (error) {
                 console.error(error);

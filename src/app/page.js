@@ -7,10 +7,10 @@ import TradePanelBybit from "./Panel/tradePanelBybit";
 export default function Home() {
   return (
     <div className={Styles.page}>
-      <TestPlatfomAPIContextProvider>
+      <BybitPlatfomAPIContextProvider>
         {/* <TradePanel/> */}
         <TradePanelBybit/>
-      </TestPlatfomAPIContextProvider>
+      </BybitPlatfomAPIContextProvider>
     </div>
   );
 }
