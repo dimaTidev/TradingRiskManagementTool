@@ -6,17 +6,19 @@ import LabeledField from "./labeledField";
 import InputField from '@/lib/UIComponents/InputField';
 import { roundNumber } from '../Components/tradeUtils';
 
-const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTickerAsync, onValidInputs, checkTickerPriceAsync, ...params}, ref) {
-    const [tickerControlled, setTickerControlled] = useState('BTCUSDT');
+const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTickerAsync, onValidInputs, checkTickerPriceAsync, defaultValues, ...params}, ref) {
+    defaultValues ??= {};
 
-    const [ticker, setTicker] = useState('BTCUSDT');
-    const [capital, setCapital] = useState(100);
-    const [targetRiskPers, setTargetRiskPers] = useState(1);
-    const [targetRiskValue, setTargetRiskValue] = useState(0);
-    const [leverage, setLeverage] = useState(20);
-    const [entryPrice, setEntryPrice] = useState(0);
-    const [stopLossPercent, setStopLossPersent] = useState(0.37);
-    const [takeProfitRR, setTakeProfitRR] = useState(2);
+    const [tickerControlled, setTickerControlled] = useState(defaultValues.ticker ? defaultValues.ticker : "");
+    const [ticker, setTicker] = useState(defaultValues.ticker ? defaultValues.ticker : "");
+
+    const [capital, setCapital] = useState(defaultValues.capital ? defaultValues.capital : "");
+    const [targetRiskPers, setTargetRiskPers] = useState(defaultValues.targetRisk ? defaultValues.targetRisk : 1);
+    const [targetRiskValue, setTargetRiskValue] = useState("");
+    const [leverage, setLeverage] = useState(defaultValues.leverage ? defaultValues.leverage : 10);
+    const [entryPrice, setEntryPrice] = useState(defaultValues.entryPrice ? defaultValues.entryPrice : "");
+    const [stopLossPercent, setStopLossPersent] = useState(defaultValues.stopLossPercent ? defaultValues.stopLossPercent : 0.3);
+    const [takeProfitRR, setTakeProfitRR] = useState(defaultValues.takeProfitRR ? defaultValues.takeProfitRR : 2);
     const [isValidTicker, setIsValidTicker] = useState(false);
 
     function checkIsValidInputs(){
@@ -34,7 +36,7 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
     }
 
     useEffect(() => {
-        setTargetRiskValue(capital * targetRiskPers);
+        setTargetRiskValue(capital * (targetRiskPers / 100));
     }, []);
 
     useEffect(() => {
@@ -53,9 +55,12 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
         const checkValidTicker = async () => {
             try {
                 params.onValid?.(false);
-                const isValidTicker = await checkValidTickerAsync?.(ticker);
 
-                setIsValidTicker(isValidTicker);
+                if(ticker != undefined && ticker != ""){
+                    const isValidTicker = await checkValidTickerAsync?.(ticker);
+
+                    setIsValidTicker(isValidTicker);
+                }
 
                 onTickerChanged?.(ticker);
             } catch (error) {

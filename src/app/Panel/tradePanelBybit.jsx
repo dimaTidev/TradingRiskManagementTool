@@ -14,6 +14,8 @@ import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
 import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
 
+const dataSaveKey = "tradingPanelInputs";
+
 export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
   // const [_, setRedraw] = useReducer(s => s + 1, 0);
@@ -22,9 +24,16 @@ export default function TradePanelBybit() {
   const [inputData, setInputData] = useState({});
   const [ticker, setTicker] = useState("");
   const [tickerInfoData, setTickerInfoData] = useState({});
-  // const [inputData, setInputData] = useState(second)
 
   const [openSettings, setOpenSettings] = useState(false);
+
+  let loadedData = undefined;
+
+  try {
+    loadedData = JSON.parse(localStorage.getItem(dataSaveKey));
+  } catch (error) {
+    
+  }
 
   useEffect(() => {
     if (inputDataRef.current) {
@@ -68,6 +77,13 @@ export default function TradePanelBybit() {
     tickerInfoData.minOrderQty, 
     tickerInfoData.qtyStep, 
     inputData.takeProfitRR);
+
+  function handleInputDataChanged(){
+    const data = inputDataRef.current?.getInputData();
+    setInputData(data);
+    localStorage.setItem(dataSaveKey, JSON.stringify(data));
+    console.log("save data", dataSaveKey, data);
+  }
   
   //#region orders
   function handlePlaceLongLimitOrder(){
@@ -144,7 +160,7 @@ export default function TradePanelBybit() {
                 <Inputs 
                   ref={inputDataRef} 
                   className={Styles.leftSide} 
-                  onChange={() => setInputData(inputDataRef.current?.getInputData())} 
+                  onChange={handleInputDataChanged} 
                   onTickerChanged={(t) => setTicker(t)}
                   onValidInputs={setInputDataValid}
                   checkValidTickerAsync={async (ticker) => {
@@ -155,6 +171,8 @@ export default function TradePanelBybit() {
                     const result = await platformAPIContext.getTickerPricing(ticker);
                     return result.markPrice;
                   }}
+
+                  defaultValues={loadedData}
                 />
                 <div className={Styles.rightSide}>
                   <TickerInfo {...tickerInfoData}/>
