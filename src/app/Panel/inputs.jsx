@@ -43,9 +43,9 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
         params.onChange?.();
 
         if(checkIsValidInputs()){
-            onValidInputs?.(false);
-        }else{
             onValidInputs?.(true);
+        }else{
+            onValidInputs?.(false);
         }
 
     }, [ticker, capital, targetRiskPers, leverage, entryPrice, stopLossPercent, takeProfitRR, isValidTicker]);

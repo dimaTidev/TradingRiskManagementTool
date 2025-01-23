@@ -27,6 +27,8 @@ export default function TradePanelBybit() {
 
   const [openSettings, setOpenSettings] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(true);
+
   let loadedData = undefined;
 
   try {
@@ -51,10 +53,12 @@ export default function TradePanelBybit() {
             if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
               return;
 
+            setIsLoading(true);
             const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);
             console.log("responceTickerInfo", responceTickerInfo);
             
             setTickerInfoData(responceTickerInfo);
+            setIsLoading(false);
 
             console.log("tickerInfo for", ticker, JSON.stringify(responceTickerInfo));
           } catch (error) {
@@ -164,11 +168,15 @@ export default function TradePanelBybit() {
                   onTickerChanged={(t) => setTicker(t)}
                   onValidInputs={setInputDataValid}
                   checkValidTickerAsync={async (ticker) => {
+                    setIsLoading(true);
                     const result = await platformAPIContext.getTickerInfo(ticker);
+                    setIsLoading(false);
                     return result.errorMsg == undefined;
                   }}
                   checkTickerPriceAsync={async (ticker) => {
+                    setIsLoading(true);
                     const result = await platformAPIContext.getTickerPricing(ticker);
+                    setIsLoading(false);
                     return result.markPrice;
                   }}
 
@@ -187,7 +195,7 @@ export default function TradePanelBybit() {
                 shortLimitOrderCallback={handlePlaceShortLimitOrder}          
                 longMarketOrderCallback={handlePlaceLongMarketOrderAsync}
                 shortMarketOrderCallback={handlePlaceShortMarketOrderAsync}
-                disabled={inputDataValid}
+                disabled={isLoading || !inputDataValid}
               />
             </>
           )}
