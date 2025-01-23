@@ -14,16 +14,28 @@ import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
 import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
 
+const dataSaveKey = "tradingPanelInputs";
+
 export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
   // const [_, setRedraw] = useReducer(s => s + 1, 0);
   const inputDataRef = useRef();
+  const [inputDataValid, setInputDataValid] = useState({});
   const [inputData, setInputData] = useState({});
   const [ticker, setTicker] = useState("");
   const [tickerInfoData, setTickerInfoData] = useState({});
-  // const [inputData, setInputData] = useState(second)
 
   const [openSettings, setOpenSettings] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  let loadedData = undefined;
+
+  try {
+    loadedData = JSON.parse(localStorage.getItem(dataSaveKey));
+  } catch (error) {
+    
+  }
 
   useEffect(() => {
     if (inputDataRef.current) {
@@ -41,10 +53,12 @@ export default function TradePanelBybit() {
             if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
               return;
 
+            setIsLoading(true);
             const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);
             console.log("responceTickerInfo", responceTickerInfo);
             
             setTickerInfoData(responceTickerInfo);
+            setIsLoading(false);
 
             console.log("tickerInfo for", ticker, JSON.stringify(responceTickerInfo));
           } catch (error) {
@@ -67,6 +81,13 @@ export default function TradePanelBybit() {
     tickerInfoData.minOrderQty, 
     tickerInfoData.qtyStep, 
     inputData.takeProfitRR);
+
+  function handleInputDataChanged(){
+    const data = inputDataRef.current?.getInputData();
+    setInputData(data);
+    localStorage.setItem(dataSaveKey, JSON.stringify(data));
+    console.log("save data", dataSaveKey, data);
+  }
   
   //#region orders
   function handlePlaceLongLimitOrder(){
@@ -140,7 +161,27 @@ export default function TradePanelBybit() {
           {!openSettings && (
             <>
               <div className={Styles.base}>
-                <Inputs ref={inputDataRef} className={Styles.leftSide} onChange={() => setInputData(inputDataRef.current?.getInputData())} onTickerChanged={(t) => setTicker(t)}/>
+                <Inputs 
+                  ref={inputDataRef} 
+                  className={Styles.leftSide} 
+                  onChange={handleInputDataChanged} 
+                  onTickerChanged={(t) => setTicker(t)}
+                  onValidInputs={setInputDataValid}
+                  checkValidTickerAsync={async (ticker) => {
+                    setIsLoading(true);
+                    const result = await platformAPIContext.getTickerInfo(ticker);
+                    setIsLoading(false);
+                    return result.errorMsg == undefined;
+                  }}
+                  checkTickerPriceAsync={async (ticker) => {
+                    setIsLoading(true);
+                    const result = await platformAPIContext.getTickerPricing(ticker);
+                    setIsLoading(false);
+                    return result.markPrice;
+                  }}
+
+                  defaultValues={loadedData}
+                />
                 <div className={Styles.rightSide}>
                   <TickerInfo {...tickerInfoData}/>
                   <OrderCalculationInfo {...orderData}/>
@@ -154,6 +195,7 @@ export default function TradePanelBybit() {
                 shortLimitOrderCallback={handlePlaceShortLimitOrder}          
                 longMarketOrderCallback={handlePlaceLongMarketOrderAsync}
                 shortMarketOrderCallback={handlePlaceShortMarketOrderAsync}
+                disabled={isLoading || !inputDataValid}
               />
             </>
           )}

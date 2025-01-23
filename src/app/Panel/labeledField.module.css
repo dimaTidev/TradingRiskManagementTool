@@ -10,3 +10,7 @@
     color: var(--text-color-secondary);
     font-size: 14px;
 }
+
+.labelDisabled{
+    opacity: 0.3;
+}
