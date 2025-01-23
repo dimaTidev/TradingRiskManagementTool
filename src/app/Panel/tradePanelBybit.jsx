@@ -149,8 +149,11 @@ export default function TradePanelBybit() {
                   onValidInputs={setInputDataValid}
                   checkValidTickerAsync={async (ticker) => {
                     const result = await platformAPIContext.getTickerInfo(ticker);
-                    console.log("getTickerInfo async", result);
                     return result.errorMsg == undefined;
+                  }}
+                  checkTickerPriceAsync={async (ticker) => {
+                    const result = await platformAPIContext.getTickerPricing(ticker);
+                    return result.markPrice;
                   }}
                 />
                 <div className={Styles.rightSide}>

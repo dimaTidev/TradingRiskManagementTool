@@ -6,7 +6,7 @@ import LabeledField from "./labeledField";
 import InputField from '@/lib/UIComponents/InputField';
 import { roundNumber } from '../Components/tradeUtils';
 
-const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTickerAsync, onValidInputs, ...params}, ref) {
+const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTickerAsync, onValidInputs, checkTickerPriceAsync, ...params}, ref) {
     const [tickerControlled, setTickerControlled] = useState('BTCUSDT');
 
     const [ticker, setTicker] = useState('BTCUSDT');
@@ -55,8 +55,6 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                 params.onValid?.(false);
                 const isValidTicker = await checkValidTickerAsync?.(ticker);
 
-                console.log("is valid ticker await: ", isValidTicker);
-                
                 setIsValidTicker(isValidTicker);
 
                 onTickerChanged?.(ticker);
@@ -233,9 +231,21 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                 </LabeledField>
             </div>
             
-            <LabeledField label="Entry price" disabled={disabledEntryPrice}>
-                <InputField type="number" value={entryPrice} onChange={(e) => setEntryPrice(e.target.value)} placeholder="eg: 96000" disabled={disabledEntryPrice}/>
-            </LabeledField>
+            <div className={Styles.horizontalInputs}>
+                <LabeledField label="Entry price" disabled={disabledEntryPrice}>
+                    <InputField type="number" value={entryPrice} onChange={(e) => setEntryPrice(e.target.value)} placeholder="eg: 96000" disabled={disabledEntryPrice}>
+                        <button className={Styles.historyButton} onClick={async (e) => {
+                            const price = await checkTickerPriceAsync?.(ticker);
+                            if(price != undefined && price != "" && Number.parseFloat(price) > 0){
+                                setEntryPrice(price);
+                            }
+                            
+                        }} disabled={disabledEntryPrice}>Last price</button>
+                    </InputField>
+                </LabeledField>
+                
+            </div>
+
                         
             <LabeledField label="Stop loss, %" disabled={disabledStopLoss}>
                 <InputField type="number" value={stopLossPercent} step="0.05" onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40" disabled={disabledStopLoss}/>
