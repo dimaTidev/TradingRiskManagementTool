@@ -9,7 +9,7 @@
     border-radius: 8px;
     border: 1px solid var(--background-border-color);
 
-    width: 420px;
+    min-width: 420px;
     min-height: 100px;
 
     display: flex;

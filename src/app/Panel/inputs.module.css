@@ -1,0 +1,42 @@
+.historyButtonsArray{
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.historyButton{
+    /* all: unset; */
+    background-color: var(--button-default-background-color-disabled);
+    padding: 4px;
+    color: var(--text-color-secondary);
+    
+    border: 1px solid var(--background-border-color);
+    border-radius: 3px;
+}
+
+.historyButton:disabled{
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.historyButton:hover{
+    background-color: var(--button-default-background-color-hover);
+}
+
+.historyButton:active{
+    background-color: var(--button-default-background-color-active);
+}
+
+.horizontalInputs{
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+}
+
+.horizontalInputs > :first-child {
+    flex: 3;
+}
+
+.horizontalInputs > :not(:first-child) {
+    flex: 1;
+}

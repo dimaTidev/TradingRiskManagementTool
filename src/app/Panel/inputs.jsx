@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react'
-import Styles from "./tradePanel.module.css";
+import Styles from "./inputs.module.css";
 import LabeledField from "./labeledField";
 import InputField from '@/lib/UIComponents/InputField';
 import { roundNumber } from '../Components/tradeUtils';
@@ -11,7 +11,8 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
 
     const [ticker, setTicker] = useState('BTCUSDT');
     const [capital, setCapital] = useState(100);
-    const [targetRisk, setTargetRisk] = useState(1);
+    const [targetRiskPers, setTargetRiskPers] = useState(1);
+    const [targetRiskValue, setTargetRiskValue] = useState(0);
     const [leverage, setLeverage] = useState(20);
     const [entryPrice, setEntryPrice] = useState(0);
     const [stopLossPercent, setStopLossPersent] = useState(0.37);
@@ -23,7 +24,7 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             leverage == "" || 
             stopLossPercent == "" ||
             ticker == "" ||
-            targetRisk == "" ||
+            targetRiskPers == "" ||
             isValidTicker == false
         ){
             return false;
@@ -31,6 +32,10 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             return true;
         }
     }
+
+    useEffect(() => {
+        setTargetRiskValue(capital * targetRiskPers);
+    }, []);
 
     useEffect(() => {
         params.onChange?.();
@@ -41,7 +46,7 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             onValidInputs?.(true);
         }
 
-    }, [ticker, capital, targetRisk, leverage, entryPrice, stopLossPercent, takeProfitRR, isValidTicker]);
+    }, [ticker, capital, targetRiskPers, leverage, entryPrice, stopLossPercent, takeProfitRR, isValidTicker]);
 
 
     useEffect(() => {
@@ -76,7 +81,7 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
          */
         getInputData: () => {return {
             capital, 
-            targetRisk, 
+            targetRisk: targetRiskPers, 
             leverage, 
             ticker,
             stopLossPercent, 
@@ -93,50 +98,42 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
 
     return (
         <div {...params}>
-            <LabeledField label="Capital">
-                <InputField type="number" value={capital} onChange={(e) => setCapital(e.target.value)} placeholder="eg: 10000"/>
-            </LabeledField>
+            <div className={Styles.horizontalInputs}>
+                <LabeledField label="Capital">
+                    <InputField type="number" value={capital} onChange={(e) => {
+                            setCapital(e.target.value);
 
-            <LabeledField label="Capital risk, %" disabled = {disabledTargetRisk}>
-                <InputField type="number" value={targetRisk} 
-                onChange={(e) => {
-                    if(e.target.value == undefined || e.target.value == ""){
-                        setTargetRisk(e.target.value);
-                        return;
-                    }
-                    setTargetRisk(Math.min(Math.max(e.target.value, 0), 100))
-                }} 
+                            if(e.target.value == ""){
+                                setTargetRiskValue(0);
+                            }else{
+                                const inputValue = Number.parseFloat(e.target.value);
+                                const value = inputValue * (targetRiskPers / 100);
+                                setTargetRiskValue(roundNumber(value, 3));
+                            }
+                        }} 
+                        placeholder="eg: 10000"
+                    />
+                </LabeledField>
 
-                onBlur={(e) => {
-                    if(e.target.value == undefined || e.target.value == ""){
-                        setTargetRisk(0.01);
-                    }
-                }} 
-                placeholder="eg: 1" 
-                disabled = {disabledTargetRisk}
-            />
-            </LabeledField>
+                <LabeledField label="Leverage, x" disabled={disabledLeverage}>
+                    <InputField type="number" value={leverage} onChange={(e) => {
+                        if(e.target.value == undefined || e.target.value == ""){
+                            setLeverage(e.target.value);
+                            return;
+                        }
 
-            <LabeledField label="Leverage, x" disabled={disabledLeverage}>
-                <InputField type="number" value={leverage} onChange={(e) => {
-                    if(e.target.value == undefined || e.target.value == ""){
-                        setLeverage(e.target.value);
-                        return;
-                    }
-
-                    setLeverage(roundNumber(Math.min(Math.max(e.target.value, 1), 100), 2));
-                }} 
-                
-                onBlur={(e) => {
-                    if(e.target.value == undefined || e.target.value == ""){
-                        setLeverage(1);
-                    }
-                }} 
-                
-                placeholder="eg: 20" disabled={disabledLeverage}/>
-            </LabeledField>
-
-            <hr/>
+                        setLeverage(roundNumber(Math.min(Math.max(e.target.value, 1), 100), 2));
+                    }} 
+                    
+                    onBlur={(e) => {
+                        if(e.target.value == undefined || e.target.value == ""){
+                            setLeverage(1);
+                        }
+                    }} 
+                    
+                    placeholder="eg: 20" disabled={disabledLeverage}/>
+                </LabeledField>
+            </div>
 
             <LabeledField label="Ticker">
                 <InputField 
@@ -162,12 +159,75 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                     }} 
                     placeholder="eg: BTCUSDT"
                 />
+                <div className={Styles.historyButtonsArray}>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCUSDT"); setTickerControlled("BTCUSDT")}}>BTCUSDT</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("BTCPERP"); setTickerControlled("BTCPERP")}}>BTCPERP</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHUSDT"); setTickerControlled("ETHUSDT")}}>ETHUSDT</button>
+                    <button className={Styles.historyButton} onClick={() => {setTicker("ETHPERP"); setTickerControlled("ETHPERP")}}>ETHPERP</button>
+                </div>
             </LabeledField>
-            <div className={Styles.historyButtonsArray}>
-                <button className={Styles.historyButton} onClick={() => {setTicker("BTCUSDT"); setTickerControlled("BTCUSDT")}}>BTCUSDT</button>
-                <button className={Styles.historyButton} onClick={() => {setTicker("BTCPERP"); setTickerControlled("BTCPERP")}}>BTCPERP</button>
-                <button className={Styles.historyButton} onClick={() => {setTicker("ETHUSDT"); setTickerControlled("ETHUSDT")}}>ETHUSDT</button>
-                <button className={Styles.historyButton} onClick={() => {setTicker("ETHPERP"); setTickerControlled("ETHPERP")}}>ETHPERP</button>
+            
+
+            <hr/>
+
+            <div className={Styles.horizontalInputs}>
+                <LabeledField label="Target risk" disabled = {disabledTargetRisk}>
+                    <InputField type="number" value={targetRiskValue} 
+                    onChange={(e) => {
+                        if(e.target.value == undefined || e.target.value == ""){
+                            setTargetRiskValue(e.target.value);
+                            return;
+                        }
+
+                        const inputValue = Number.parseFloat(e.target.value);
+                        const value = Math.min(Math.max(inputValue, 1), 100);
+                        const valuePers = roundNumber((value / capital) * 100, 2);
+
+                        setTargetRiskPers(valuePers);
+                        setTargetRiskValue(roundNumber(value, 3));      
+                    }} 
+
+                    onBlur={(e) => {
+                        if(e.target.value == undefined || e.target.value == ""){
+                            const valuePers = 0.01;
+                            const value = capital * (valuePers / 100);
+                            setTargetRiskPers(valuePers);
+                            setTargetRiskValue(roundNumber(value, 3));
+                        }
+                    }} 
+                    placeholder="eg: 1" 
+                    disabled = {disabledTargetRisk}
+                />
+                </LabeledField>
+
+                <LabeledField label="%" disabled = {disabledTargetRisk}>
+                    <InputField type="number" value={targetRiskPers} 
+                    onChange={(e) => {
+                        if(e.target.value == undefined || e.target.value == ""){
+                            setTargetRiskPers(e.target.value);
+                            return;
+                        }
+
+                        const inputValue = Number.parseFloat(e.target.value);
+                        const valuePers = Math.min(Math.max(inputValue, 0.01), 100);
+                        const value = capital * (valuePers / 100);
+
+                        setTargetRiskPers(valuePers);
+                        setTargetRiskValue(roundNumber(value, 3));
+                    }} 
+
+                    onBlur={(e) => {
+                        if(e.target.value == undefined || e.target.value == ""){
+                            const valuePers = 0.01;
+                            const value = capital * (valuePers / 100);
+                            setTargetRiskPers(valuePers);
+                            setTargetRiskValue(roundNumber(value, 3));
+                        }
+                    }} 
+                    placeholder="eg: 1" 
+                    disabled = {disabledTargetRisk}
+                />
+                </LabeledField>
             </div>
             
             <LabeledField label="Entry price" disabled={disabledEntryPrice}>
@@ -176,18 +236,18 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                         
             <LabeledField label="Stop loss, %" disabled={disabledStopLoss}>
                 <InputField type="number" value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40" disabled={disabledStopLoss}/>
+                <div className={Styles.historyButtonsArray}>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.1)} disabled={disabledStopLoss}>0.1</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.15)} disabled={disabledStopLoss}>0.15</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.20)} disabled={disabledStopLoss}>0.20</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.25)} disabled={disabledStopLoss}>0.25</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.30)} disabled={disabledStopLoss}>0.30</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.35)} disabled={disabledStopLoss}>0.35</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.40)} disabled={disabledStopLoss}>0.40</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.45)} disabled={disabledStopLoss}>0.45</button>
+                    <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.50)} disabled={disabledStopLoss}>0.50</button>
+                </div>
             </LabeledField>
-            <div className={Styles.historyButtonsArray}>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.1)} disabled={disabledStopLoss}>0.1</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.15)} disabled={disabledStopLoss}>0.15</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.20)} disabled={disabledStopLoss}>0.20</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.25)} disabled={disabledStopLoss}>0.25</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.30)} disabled={disabledStopLoss}>0.30</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.35)} disabled={disabledStopLoss}>0.35</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.40)} disabled={disabledStopLoss}>0.40</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.45)} disabled={disabledStopLoss}>0.45</button>
-                <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.50)} disabled={disabledStopLoss}>0.50</button>
-            </div>
                                     
             <LabeledField label="Take profit, RR" disabled={disabledTakeProfit}>
                 <InputField type="number" value={takeProfitRR} onChange={(e) => setTakeProfitRR(e.target.value)} placeholder="eg: 2" disabled={disabledTakeProfit}/>
