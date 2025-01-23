@@ -5,6 +5,7 @@ import ButtonIcon, { Size } from "@/lib/UIComponents/ButtonIcon";
 import InputField from "@/app/Components/inputField";
 import ToggleField from "@/app/Components/toggleField";
 import ActionButton, { Variant } from "@/lib/UIComponents/ActionButton";
+import { messageVariant, SideToastContext } from "../messageManager/messageManager";
 
 export function APICredentialsSettings() {
     const platformAPIContext = useContext(PlatformAPIContext);
@@ -49,6 +50,7 @@ export function APICredentialsSettings() {
 
 export function APICredentialsSettingsRemoveButton({onRemoveCredentials}) {
     const platformAPIContext = useContext(PlatformAPIContext);
+    const sideToastContext = useContext(SideToastContext);
 
   return (
         <div className={`${Styles.credentialSettings} ${Styles.dangerField}`} style={{flexDirection: "row", alignItems: "center"}}>
@@ -56,6 +58,7 @@ export function APICredentialsSettingsRemoveButton({onRemoveCredentials}) {
             <ButtonIcon size={Size.L} src="delete.svg" onClick={() => {
                 platformAPIContext.deleteCredentials();
                 onRemoveCredentials?.();
+                sideToastContext.showMessage("Account removed", "Account removed successfuly", messageVariant.SUCCESS);
             }}/>
         </div>
   )

@@ -86,6 +86,12 @@ export async function submitOrder(symbol, side, orderType, qty, leverage, price,
     });
     
     console.log('responce:', JSON.stringify(responce));
+
+    return {
+        isError: responce.retMsg != "OK",
+        error: responce.retMsg != "OK" ? responce.retMsg : undefined,
+        orderId: responce.orderId
+    }
 }
 
 // async function getTickers(){

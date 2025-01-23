@@ -118,10 +118,10 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.stopLossPrice 
      */
     async function handlePlaceShortOrder(params){
-        console.log("place short order", params);
+
         // TODO: add error message handling!
         try {
-            submitOrder(
+            const result = await submitOrder(
                 params.ticker,
                 "Short",
                 params.orderType,
@@ -131,8 +131,14 @@ export function BybitPlatfomAPIContextProvider({ children }) {
                 params.takeProfitPrice,
                 params.stopLossPrice
             );
+
+            return result;
         } catch (error) {
             console.log(error);
+        }
+
+        return {
+            isError: true,
         }
     }
 
@@ -147,10 +153,10 @@ export function BybitPlatfomAPIContextProvider({ children }) {
      * @param {Number} params.stopLossPrice 
      */
     async function handlePlaceLongOrder(params){
-        console.log("place long order", params);
+
         // TODO: add error message handling!
         try {
-            submitOrder(
+            const result = await submitOrder(
                 params.ticker,
                 "Long",
                 params.orderType,
@@ -160,8 +166,14 @@ export function BybitPlatfomAPIContextProvider({ children }) {
                 params.takeProfitPrice,
                 params.stopLossPrice
             );
+
+            return result;
         } catch (error) {
             console.log(error);
+        }
+
+        return {
+            isError: true,
         }
     }
 
