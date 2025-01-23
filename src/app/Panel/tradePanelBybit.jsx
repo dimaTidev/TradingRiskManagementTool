@@ -13,11 +13,13 @@ import Settings from './panelSettings';
 import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
 import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
+import { messageVariant, SideToastContext } from './messageManager/messageManager';
 
 const dataSaveKey = "tradingPanelInputs";
 
 export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
+  const sideToastContext = useContext(SideToastContext);
   // const [_, setRedraw] = useReducer(s => s + 1, 0);
   const inputDataRef = useRef();
   const [inputDataValid, setInputDataValid] = useState({});
@@ -55,12 +57,11 @@ export default function TradePanelBybit() {
 
             setIsLoading(true);
             const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);
-            console.log("responceTickerInfo", responceTickerInfo);
-            
+            // TODO: handle error messages!
+
             setTickerInfoData(responceTickerInfo);
             setIsLoading(false);
 
-            console.log("tickerInfo for", ticker, JSON.stringify(responceTickerInfo));
           } catch (error) {
               console.error(error);
           }
@@ -86,11 +87,10 @@ export default function TradePanelBybit() {
     const data = inputDataRef.current?.getInputData();
     setInputData(data);
     localStorage.setItem(dataSaveKey, JSON.stringify(data));
-    console.log("save data", dataSaveKey, data);
   }
   
   //#region orders
-  function handlePlaceLongLimitOrder(){
+  async function handlePlaceLongLimitOrder(){
     const data = {
       ticker: inputData.ticker,
       orderType: "Limit",
@@ -100,10 +100,14 @@ export default function TradePanelBybit() {
       takeProfitPrice: orderData.takeProfitPriceLong,
       stopLossPrice: orderData.stopLossPriceLong
     };
-    platformAPIContext.placeLongOrder(data);
+
+    sideToastContext.showMessage("Pending long limit order", `${JSON.stringify(data, null, 2)}`);
+
+    const result = await platformAPIContext.placeLongOrder(data);
+    sideToastContext.showMessage(`Long limit order ${result.isError ? "failed" : "placed"}`, result.isError ? result.error : "Placed successfuly", result.isError ? messageVariant.ERROR : messageVariant.SUCCESS);
   }
 
-  function handlePlaceShortLimitOrder(){
+  async function handlePlaceShortLimitOrder(){
     const data = {
       ticker: inputData.ticker,
       orderType: "Limit",
@@ -113,10 +117,15 @@ export default function TradePanelBybit() {
       takeProfitPrice: orderData.takeProfitPriceShort,
       stopLossPrice: orderData.stopLossPriceShort
     };
-    platformAPIContext.placeShortOrder(data);
+
+    sideToastContext.showMessage("Pending short limit order", `${JSON.stringify(data, null, 2)}`);
+
+    const result = await platformAPIContext.placeShortOrder(data);
+    sideToastContext.showMessage(`Short limit order ${result.isError ? "failed" : "placed"}`, result.isError ? result.error : "Placed successfuly", result.isError ? messageVariant.ERROR : messageVariant.SUCCESS);
   }
 
   async function handlePlaceLongMarketOrderAsync(){
+    sideToastContext.showMessage("Pending long market order", `Checking market price`)
     const res = await getTickerPricing(inputData.ticker);
     const assetPrice = Number.parseFloat(res.markPrice);
 
@@ -131,10 +140,15 @@ export default function TradePanelBybit() {
       takeProfitPrice: orderData.takeProfitPriceLong,
       stopLossPrice: orderData.stopLossPriceLong
     };
-    platformAPIContext.placeLongOrder(data);
+
+    sideToastContext.showMessage("Pending long market order", `${JSON.stringify(data, null, 2)}`);
+
+    const result = await platformAPIContext.placeLongOrder(data);
+    sideToastContext.showMessage(`Long market order ${result.isError ? "failed" : "placed"}`, result.isError ? result.error : "Placed successfuly", result.isError ? messageVariant.ERROR : messageVariant.SUCCESS);
   }
 
   async function handlePlaceShortMarketOrderAsync(){
+    sideToastContext.showMessage("Pending short market order", `Checking market price`);
     const res = await getTickerPricing(inputData.ticker);
     const assetPrice = Number.parseFloat(res.markPrice);
     
@@ -149,7 +163,11 @@ export default function TradePanelBybit() {
       takeProfitPrice: orderData.takeProfitPriceShort,
       stopLossPrice: orderData.stopLossPriceShort
     };
-    platformAPIContext.placeShortOrder(data);
+
+    sideToastContext.showMessage("Pending short market order", `${JSON.stringify(data, null, 2)}`);
+
+    const result = await platformAPIContext.placeShortOrder(data);
+    sideToastContext.showMessage(`Short market order ${result.isError ? "failed" : "placed"}`, result.isError ? result.error : "Placed successfuly", result.isError ? messageVariant.ERROR : messageVariant.SUCCESS);
   }
   //#endregion
 
