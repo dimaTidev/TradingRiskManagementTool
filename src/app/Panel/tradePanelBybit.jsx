@@ -18,6 +18,7 @@ export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
   // const [_, setRedraw] = useReducer(s => s + 1, 0);
   const inputDataRef = useRef();
+  const [inputDataValid, setInputDataValid] = useState({});
   const [inputData, setInputData] = useState({});
   const [ticker, setTicker] = useState("");
   const [tickerInfoData, setTickerInfoData] = useState({});
@@ -140,7 +141,18 @@ export default function TradePanelBybit() {
           {!openSettings && (
             <>
               <div className={Styles.base}>
-                <Inputs ref={inputDataRef} className={Styles.leftSide} onChange={() => setInputData(inputDataRef.current?.getInputData())} onTickerChanged={(t) => setTicker(t)}/>
+                <Inputs 
+                  ref={inputDataRef} 
+                  className={Styles.leftSide} 
+                  onChange={() => setInputData(inputDataRef.current?.getInputData())} 
+                  onTickerChanged={(t) => setTicker(t)}
+                  onValidInputs={setInputDataValid}
+                  checkValidTickerAsync={async (ticker) => {
+                    const result = await platformAPIContext.getTickerInfo(ticker);
+                    console.log("getTickerInfo async", result);
+                    return result.errorMsg == undefined;
+                  }}
+                />
                 <div className={Styles.rightSide}>
                   <TickerInfo {...tickerInfoData}/>
                   <OrderCalculationInfo {...orderData}/>
@@ -154,6 +166,7 @@ export default function TradePanelBybit() {
                 shortLimitOrderCallback={handlePlaceShortLimitOrder}          
                 longMarketOrderCallback={handlePlaceLongMarketOrderAsync}
                 shortMarketOrderCallback={handlePlaceShortMarketOrderAsync}
+                disabled={inputDataValid}
               />
             </>
           )}

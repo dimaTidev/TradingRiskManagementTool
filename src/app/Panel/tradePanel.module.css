@@ -62,6 +62,11 @@
     border-radius: 3px;
 }
 
+.historyButton:disabled{
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 .historyButton:hover{
     background-color: var(--button-default-background-color-hover);
 }
