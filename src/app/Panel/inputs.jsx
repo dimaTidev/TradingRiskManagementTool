@@ -201,32 +201,35 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                 </LabeledField>
 
                 <LabeledField label="%" disabled = {disabledTargetRisk}>
-                    <InputField type="number" value={targetRiskPers} 
-                    onChange={(e) => {
-                        if(e.target.value == undefined || e.target.value == ""){
-                            setTargetRiskPers(e.target.value);
-                            return;
-                        }
+                    <InputField 
+                        type="number" 
+                        value={targetRiskPers} 
+                        step="0.25"
+                        onChange={(e) => {
+                            if(e.target.value == undefined || e.target.value == ""){
+                                setTargetRiskPers(e.target.value);
+                                return;
+                            }
 
-                        const inputValue = Number.parseFloat(e.target.value);
-                        const valuePers = Math.min(Math.max(inputValue, 0.01), 100);
-                        const value = capital * (valuePers / 100);
-
-                        setTargetRiskPers(valuePers);
-                        setTargetRiskValue(roundNumber(value, 3));
-                    }} 
-
-                    onBlur={(e) => {
-                        if(e.target.value == undefined || e.target.value == ""){
-                            const valuePers = 0.01;
+                            const inputValue = Number.parseFloat(e.target.value);
+                            const valuePers = Math.min(Math.max(inputValue, 0.01), 100);
                             const value = capital * (valuePers / 100);
+
                             setTargetRiskPers(valuePers);
                             setTargetRiskValue(roundNumber(value, 3));
-                        }
-                    }} 
-                    placeholder="eg: 1" 
-                    disabled = {disabledTargetRisk}
-                />
+                        }} 
+
+                        onBlur={(e) => {
+                            if(e.target.value == undefined || e.target.value == ""){
+                                const valuePers = 0.01;
+                                const value = capital * (valuePers / 100);
+                                setTargetRiskPers(valuePers);
+                                setTargetRiskValue(roundNumber(value, 3));
+                            }
+                        }} 
+                        placeholder="eg: 1" 
+                        disabled = {disabledTargetRisk}
+                    />
                 </LabeledField>
             </div>
             
@@ -235,7 +238,7 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             </LabeledField>
                         
             <LabeledField label="Stop loss, %" disabled={disabledStopLoss}>
-                <InputField type="number" value={stopLossPercent} onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40" disabled={disabledStopLoss}/>
+                <InputField type="number" value={stopLossPercent} step="0.05" onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40" disabled={disabledStopLoss}/>
                 <div className={Styles.historyButtonsArray}>
                     <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.1)} disabled={disabledStopLoss}>0.1</button>
                     <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.15)} disabled={disabledStopLoss}>0.15</button>
@@ -250,7 +253,7 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             </LabeledField>
                                     
             <LabeledField label="Take profit, RR" disabled={disabledTakeProfit}>
-                <InputField type="number" value={takeProfitRR} onChange={(e) => setTakeProfitRR(e.target.value)} placeholder="eg: 2" disabled={disabledTakeProfit}/>
+                <InputField type="number" value={takeProfitRR} step="0.5" onChange={(e) => setTakeProfitRR(e.target.value)} placeholder="eg: 2" disabled={disabledTakeProfit}/>
             </LabeledField>
         </div>
     )
