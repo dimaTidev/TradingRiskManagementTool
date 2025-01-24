@@ -4,13 +4,15 @@ import TradePanel from "./Components/tradePanel";
 import { BybitPlatfomAPIContextProvider, TestPlatfomAPIContextProvider } from "./Components/platformAPIContext";
 import TradePanelBybit from "./Panel/tradePanelBybit";
 import { SideToastContextProvider } from "./Panel/messageManager/messageManager";
+import TestUIComponents from "@/lib/UIComponents/Test";
 
 export default function Home() {
   return (
     <div className={Styles.page}>
+      {/* <TestUIComponents/> */}
       <SideToastContextProvider>
         <BybitPlatfomAPIContextProvider>
-          {/* <TradePanel/> */}
+          
           <TradePanelBybit/>
         </BybitPlatfomAPIContextProvider>
       </SideToastContextProvider>

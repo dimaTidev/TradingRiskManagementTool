@@ -1,19 +1,17 @@
-import ButtonIcon, { Size } from "@/lib/UIComponents/ButtonIcon";
+import ButtonIcon from "@/lib/UIComponents/ButtonIcon";
 import Styles from "./panelSetting.module.css";
-import ToggleField from "../Components/toggleField";
 import { APICredentialsSettingsRemoveButton } from "./creadentials/credentials";
+import { Size } from "@/lib/UIComponents/uiCommon";
 
-export default function Settings({onClose, isAdvancedMode, setAdvancedMode}) {
+export default function Settings({onClose, isAdvancedMode}) {
     return (
       <div className={Styles.settingsOverlay}>
           <div className={Styles.panel} onClick={(e) => e.stopPropagation()}>
-              <div className={Styles.header}>
+              {/* <div className={Styles.header}>
                   <a className={Styles.headerFont}>Settings</a>
                   <ButtonIcon src="close.svg" quiet={true} size={Size.L} onClick={onClose}/>
-              </div>
-              <hr/>
-  
-              <ToggleField checked={isAdvancedMode ? "checked" : ""} onChange={() => setAdvancedMode?.((s) => !s)} label="Advanced mode"/>
+              </div> */}
+              {/* <hr/> */}
       
               <APICredentialsSettingsRemoveButton onRemoveCredentials={() => onClose?.()}/>
           </div>
