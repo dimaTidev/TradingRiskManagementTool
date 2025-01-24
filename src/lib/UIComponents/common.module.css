@@ -7,16 +7,37 @@
 */
 
 
+.size_xs {
+    padding-left: 6px;
+    padding-right: 6px;
+    border-radius: 3px;
+    height: 28px;
+}
+
 .size_s {
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 6px;
     height: 35px;
 }
 
 .size_m {
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 8px;
     height: 45px;
 }
 
 .size_l {
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 10px;
     height: 55px;
+}
+
+.sizeSquare_xs {
+    height: 28px;
+    width: 28px;
 }
 
 .sizeSquare_s {
@@ -35,6 +56,10 @@
 }
 
 /* text */
+.textSize_xs {
+    font-size: 0.750rem;
+}
+
 .textSize_s {
     font-size: 0.875rem;
 }
@@ -48,6 +73,12 @@
 }
 
 /* icon */
+.iconSize_xs {
+    height: 1rem;
+    width: 1rem;
+    position: relative;
+}
+
 .iconSize_s {
     height: 1.5rem;
     width: 1.5rem;
@@ -71,7 +102,7 @@
     /* background: none; */
 	color: inherit;
 	border: 1px solid transparent;
-    border-radius: var(--border-radius-base);
+    /* border-radius: var(--border-radius-base); */
 	/* padding: 0; */
     /* padding: 0rem 0rem; */
 	font: inherit;
