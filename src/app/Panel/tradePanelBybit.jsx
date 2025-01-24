@@ -10,10 +10,11 @@ import { calculateRiskOrderSimple } from '../Components/tradeUtils';
 import OrderCalculationInfo from './Info/orderCalculationInfo';
 import { getTickerPricing } from '../Components/PlatformsAPI/bybit';
 import Settings from './panelSettings';
-import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
+import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
 import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
 import { messageVariant, SideToastContext } from './messageManager/messageManager';
+import { Size } from '@/lib/UIComponents/uiCommon';
 
 const dataSaveKey = "tradingPanelInputs";
 
@@ -174,7 +175,7 @@ export default function TradePanelBybit() {
   return (
     <>
       { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
-        <Panel headerTitle="Bybit" headerContent={<ButtonIcon src="settings.svg" quiet={true} size={Size.L} onClick={() => setOpenSettings((s) => !s)}/>}>
+        <Panel headerTitle="Bybit" headerContent={<ButtonIcon src="settings.svg" quiet={true} size={Size.S} onClick={() => setOpenSettings((s) => !s)}/>}>
 
           {!openSettings && (
             <>

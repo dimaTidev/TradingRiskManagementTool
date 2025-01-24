@@ -1,24 +1,7 @@
 import React from "react";
-import Image from "next/image";
-import Styles from "./ButtonIcon.module.css";
-
-/**
- * @enum {number}
- */
-export const Size = {
-  S: 2,
-  M: 3,
-  L: 4,
-  XL: 5,
-};
-
-/**
- * @enum {number}
- */
-export const Variant = {
-  Default: 0,
-  Primary: 1,
-};
+import StylesCommon from "./common.module.css";
+import { Size, Variant } from "./uiCommon";
+import Icon from "./icon";
 
 /**
  * ButtonIconcomponent
@@ -34,39 +17,23 @@ export const Variant = {
 export default function ButtonIcon({
   size = Size.M,
   src,
-  style,
   className,
-  onClick,
   quiet = false,
-  variant = Variant.Default
+  variant = Variant.DEFAULT,
+  ...params
 }) {
-  let iconClass = Styles.buttonIcon_M;
+  // Button size
+  const buttonSizeClass = `${StylesCommon[`sizeSquare_${size}`]}`;
 
-  if (size === Size.S) {
-    iconClass = Styles.buttonIcon_S;
-  } else if (size === Size.L) {
-    iconClass = Styles.buttonIcon_L;
-  } else if (size === Size.XL) {
-    iconClass = Styles.buttonIcon_XL;
-  }
-
-  // Calculating the variant appearance
-  let variantClass = Styles.buttonIcon_Default;
-
-  if (variant === Variant.Primary) {
-    variantClass = Styles.buttonIcon_Primary;
-  }
+  // Appearance
+  const variantClass = StylesCommon[`buttonVariant_${variant}`];
 
   return (
     <button
-      type="button"
-      className={`${Styles.buttonIcon} ${variantClass} ${iconClass} ${quiet ? Styles.quiet : ""} ${className}`}
-      style={style}
-      onClick={onClick}
+      className={`${StylesCommon.buttonBase} ${StylesCommon.baseHorizontal} ${variantClass} ${buttonSizeClass} ${quiet ? StylesCommon.quiet : ""} ${className}`}
+      {...params}
     >
-      <div className={Styles.buttonIcon_iconContainer}>
-        <Image src={src} fill alt="button-icon" />
-      </div>
+      <Icon src={src} alt={params.alt} size={size}/>
     </button>
   );
 }

@@ -19,9 +19,35 @@
         --color-primary-secondary: #105CAD;
         --color-primary-tertiary: #394360;
 
-        --color-error: #ff596c;
+        /* Error Colors */
+        --color-error-1000: #ffccd5;
+        --color-error-700: #ff7a91;
+        --color-error: #f61b56;
+        --color-error-hover: #ff3f5f;
+        --color-error-pressed: #e6003e;
+        --color-error-secondary: #d4002c;
+        --color-error-tertiary: #98001c;
+        --color-error-quaternary: #660012;
+
+        /* Warning Colors */
+        --color-warning-1000: #fff4e0;
+        --color-warning-700: #ffd993;
         --color-warning: #f4a62c;
+        --color-warning-hover: #f6b040;
+        --color-warning-pressed: #e08c1e;
+        --color-warning-secondary: #cc7d1a;
+        --color-warning-tertiary: #b26b15;
+        --color-warning-quaternary: #975402;
+
+        /* Success Colors */
+        --color-success-1000: #d6ffd6;
+        --color-success-700: #6bf66b;
         --color-success: #52bd52;
+        --color-success-hover: #66c566;
+        --color-success-pressed: #45a445;
+        --color-success-secondary: #3e943e;
+        --color-success-tertiary: #348034;
+        --color-success-quaternary: #016501;
 
         --color-shadow: rgba(0, 0, 0, 0.6);
 

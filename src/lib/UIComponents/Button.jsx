@@ -1,6 +1,6 @@
 import React from "react";
-import Styles from "./ActionButton.module.css";
 import StylesCommon from "./common.module.css";
+import Styles from "./button.module.css";
 import {Size, Variant} from "./uiCommon";
 import Icon from "./icon";
 
@@ -14,7 +14,7 @@ import Icon from "./icon";
  * @param {function} [props.onClick] - The click event handler for the button.
  * @param {boolean} [props.quiet=false] - Whether the button should be rendered in a quiet style.
  */
-export default function ActionButton({
+export default function Button({
   children,
   src,
   alt = "icon",

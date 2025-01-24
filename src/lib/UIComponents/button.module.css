@@ -1,0 +1,14 @@
+.buttonSizing_s{
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.buttonSizing_m{
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.buttonSizing_l{
+    padding-left: 12px;
+    padding-right: 12px;
+}

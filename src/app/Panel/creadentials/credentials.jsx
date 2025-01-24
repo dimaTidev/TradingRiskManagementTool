@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import Styles from "./credentials.module.css";
 import { PlatformAPIContext } from "@/app/Components/platformAPIContext";
-import ButtonIcon, { Size } from "@/lib/UIComponents/ButtonIcon";
+import ButtonIcon from "@/lib/UIComponents/ButtonIcon";
 import InputField from "@/app/Components/inputField";
 import ToggleField from "@/app/Components/toggleField";
-import ActionButton, { Variant } from "@/lib/UIComponents/ActionButton";
+import ActionButton from "@/lib/UIComponents/ActionButton";
 import { messageVariant, SideToastContext } from "../messageManager/messageManager";
+import { Size } from "@/lib/UIComponents/uiCommon";
 
 export function APICredentialsSettings() {
     const platformAPIContext = useContext(PlatformAPIContext);
@@ -39,7 +40,7 @@ export function APICredentialsSettings() {
                     Make up a password to encrypt your API key and secret. Later you will need to enter this password to decrypt your credentials
                 </div>
                 <hr/>
-                <ActionButton variant={Variant.Default} onClick={handleApply}
+                <ActionButton onClick={handleApply}
                     disabled={apiKey == "" || apiSecret == "" || apiPass == "" ? "disabled" : ""}
                 >Connect account</ActionButton>
             </> : <UnlockCredentialsField/>}
@@ -55,7 +56,7 @@ export function APICredentialsSettingsRemoveButton({onRemoveCredentials}) {
   return (
         <div className={`${Styles.credentialSettings} ${Styles.dangerField}`} style={{flexDirection: "row", alignItems: "center"}}>
             {platformAPIContext.isDemoTrading ? "Demo acc." : ""} Remove API key and secret 
-            <ButtonIcon size={Size.L} src="delete.svg" onClick={() => {
+            <ButtonIcon size={Size.S} src="delete.svg" onClick={() => {
                 platformAPIContext.deleteCredentials();
                 onRemoveCredentials?.();
                 sideToastContext.showMessage("Account removed", "Account removed successfuly", messageVariant.SUCCESS);
@@ -72,13 +73,13 @@ export function UnlockCredentialsField() {
     <>
         <div className={Styles.unlockCredentialsField}>
             <InputField onChange={(e) => setApiPass(e.target.value)} label="Enter password"/>
-            <ButtonIcon size={Size.L} src="delete.svg" onClick={() => platformAPIContext.deleteCredentials()}/>
+            <ButtonIcon size={Size.S} src="delete.svg" onClick={() => platformAPIContext.deleteCredentials()}/>
         </div>
         <div className={Styles.helpText}>
             Enter the password to decrypt your API key and Secret. If you forgot the password click the delete button.
         </div>
         <hr/>
-        <ActionButton variant={Variant.Default} onClick={(e) => platformAPIContext.setPassword(apiPass)} disabled={apiPass == "" ? "disabled" : ""}>Decrypt</ActionButton>
+        <ActionButton onClick={(e) => platformAPIContext.setPassword(apiPass)} disabled={apiPass == "" ? "disabled" : ""}>Decrypt</ActionButton>
     </>
   )
 }

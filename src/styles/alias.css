@@ -59,6 +59,54 @@
     --button-secondary-content-color-active: var(--color-foreground-1200);
     --button-secondary-content-color-disabled: var(--color-foreground-700);
 
+    /* Error button */
+    --button-error-background-color: var(--color-error);
+    --button-error-background-color-hover: var(--color-error-hover);
+    --button-error-background-color-active: var(--color-error-pressed);
+    --button-error-background-color-disabled: var(--color-error-quaternary);
+
+    --button-error-border-color: var(--color-error-700);
+    --button-error-border-color-hover: var(--color-error-1000);
+    --button-error-border-color-active: var(--color-error-700);
+    --button-error-border-color-disabled: transparent;
+
+    --button-error-content-color: var(--text-color);
+    --button-error-content-color-hover: var(--text-color);
+    --button-error-content-color-active: var(--text-color);
+    --button-error-content-color-disabled: var(--color-error-tertiary);
+
+    /* Warning Colors */
+    --button-warning-background-color: var(--color-warning);
+    --button-warning-background-color-hover: var(--color-warning-hover);
+    --button-warning-background-color-active: var(--color-warning-pressed);
+    --button-warning-background-color-disabled: var(--color-warning-quaternary);
+
+    --button-warning-border-color: var(--color-warning-700);
+    --button-warning-border-color-hover: var(--color-warning-1000);
+    --button-warning-border-color-active: var(--color-warning-700);
+    --button-warning-border-color-disabled: transparent;
+
+    --button-warning-content-color: var(--text-color);
+    --button-warning-content-color-hover: var(--text-color);
+    --button-warning-content-color-active: var(--text-color);
+    --button-warning-content-color-disabled: var(--color-warning-tertiary);
+
+    /* Success Colors */
+    --button-success-background-color: var(--color-success);
+    --button-success-background-color-hover: var(--color-success-hover);
+    --button-success-background-color-active: var(--color-success-pressed);
+    --button-success-background-color-disabled: var(--color-success-quaternary);
+
+    --button-success-border-color: var(--color-success-700);
+    --button-success-border-color-hover: var(--color-success-1000);
+    --button-success-border-color-active: var(--color-success-700);
+    --button-success-border-color-disabled: transparent;
+
+    --button-success-content-color: var(--text-color);
+    --button-success-content-color-hover: var(--text-color);
+    --button-success-content-color-active: var(--text-color);
+    --button-success-content-color-disabled: var(--color-success-tertiary);
+
 
     /*---------------------- Sizes ---------------------- */
     /* --text-size-xs: 0.75rem; */
