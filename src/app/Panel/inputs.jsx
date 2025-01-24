@@ -144,6 +144,12 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                 <InputField 
                     value={tickerControlled} 
                     onChange={(e) => setTickerControlled(e.target.value)} 
+                    onKeyDown={(e) =>{
+                        if (e.key === 'Enter') {
+                            setTicker(e.target.value);
+                            e.target.blur();
+                        }
+                    }}
                     onBlur={async (e) => {
                         setTicker(e.target.value);
                         // if(ticker == "")
