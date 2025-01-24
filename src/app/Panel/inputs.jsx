@@ -5,6 +5,8 @@ import Styles from "./inputs.module.css";
 import LabeledField from "./labeledField";
 import InputField from '@/lib/UIComponents/InputField';
 import { roundNumber } from '../Components/tradeUtils';
+import Button from '@/lib/UIComponents/Button';
+import { Size, Variant } from '@/lib/UIComponents/uiCommon';
 
 const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTickerAsync, onValidInputs, checkTickerPriceAsync, defaultValues, ...params}, ref) {
     defaultValues ??= {};
@@ -239,13 +241,13 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             <div className={Styles.horizontalInputs}>
                 <LabeledField label="Entry price" disabled={disabledEntryPrice}>
                     <InputField type="number" value={entryPrice} onChange={(e) => setEntryPrice(e.target.value)} placeholder="eg: 96000" disabled={disabledEntryPrice}>
-                        <button className={Styles.historyButton} onClick={async (e) => {
+                        <Button variant={Variant.DEFAULT} size={Size.XS} quiet={true} onClick={async (e) => {
                             const price = await checkTickerPriceAsync?.(ticker);
                             if(price != undefined && price != "" && Number.parseFloat(price) > 0){
                                 setEntryPrice(price);
                             }
                             
-                        }} disabled={disabledEntryPrice}>Last price</button>
+                        }} disabled={disabledEntryPrice}>Last price</Button>
                     </InputField>
                 </LabeledField>
                 

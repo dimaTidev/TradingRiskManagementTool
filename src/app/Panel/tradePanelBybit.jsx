@@ -175,8 +175,13 @@ export default function TradePanelBybit() {
   return (
     <>
       { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
-        <Panel headerTitle="Bybit" headerContent={<ButtonIcon src="settings.svg" quiet={true} size={Size.S} onClick={() => setOpenSettings((s) => !s)}/>}>
-
+        <Panel headerTitle="Bybit" headerContent={(
+          <>
+            {platformAPIContext.isDemoTrading && <a className={Styles.warnText}>Demo trading</a>}
+            <ButtonIcon src="settings.svg" quiet={true} size={Size.S} onClick={() => setOpenSettings((s) => !s)}/>
+          </>
+        )}>
+          
           {!openSettings && (
             <>
               <div className={Styles.base}>

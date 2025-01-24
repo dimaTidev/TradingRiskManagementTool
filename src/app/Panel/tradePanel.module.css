@@ -43,3 +43,11 @@
     color: var(--text-color-secondary);
     font-size: 14px;
 }
+
+.warnText{
+    border: 1px solid var(--color-warning);
+    border-radius: 3px;
+    padding: 6px;
+    font-size: var(--text-size-s);
+    color: var(--color-warning);
+}

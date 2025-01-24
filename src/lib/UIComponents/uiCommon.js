@@ -2,6 +2,7 @@
  * @enum {number}
  */
 export const Size = {
+    XS: "xs",
     S: "s",
     M: "m",
     L: "l",

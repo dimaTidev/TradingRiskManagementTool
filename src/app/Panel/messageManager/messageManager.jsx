@@ -2,7 +2,8 @@
 
 import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
 import Styles from "./messageManager.module.css";
-import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
+import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
+import { Size } from '@/lib/UIComponents/uiCommon';
 
 export const messageVariant = {
     DEFAULT: "default",
@@ -110,7 +111,7 @@ function Message({guid, title, message, hideTimer = 20000, variant = messageVari
         <div className={`${Styles.sideToast} ${show && Styles.sideToastPop} ${Styles[`variant_${variant}`]}`}>
             <div className={Styles.messageHeader}>
                 {title}
-                <ButtonIcon src="close.svg" size={Size.M} quiet={true} onClick={() => setShow(false)}/>
+                <ButtonIcon src="close.svg" size={Size.XS} quiet={true} onClick={() => setShow(false)}/>
             </div>
             <hr/>
             <pre className={Styles.messageDescription}>{message}</pre>
