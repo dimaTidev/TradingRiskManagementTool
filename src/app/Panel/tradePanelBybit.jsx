@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
-import Panel from './panel'
+import Panel from '@/lib/UIComponents/panel'
 import Styles from "./tradePanel.module.css";
 import OrderButtons from './orderButtons';
 import { PlatformAPIContext } from '../Components/platformAPIContext';

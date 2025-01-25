@@ -7,6 +7,11 @@
     --background-color: var(--color-background);
     --background-color-secondary: var(--color-background-secondary);
 
+    --foreground-color: var(--color-foreground-200);
+    --foreground-color-hover: var(--color-foreground-300);
+    --foreground-color-active: var(--color-foreground-200);
+    --foreground-color-disabled: var(--color-background-secondary);
+
      /* Borders */ 
     --background-border-color: var(--color-foreground-400);
     --background-border-color-secondary: var(--color-foreground-200); /*TBD*/
