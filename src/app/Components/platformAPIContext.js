@@ -1,8 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react'
-import { createClient, getAccountInfo, getTickerInfo, getTickerPricing, submitOrder } from './PlatformsAPI/bybit';
+import React, { useContext, useEffect, useState } from 'react'
 import { decryptData, encryptData } from '@/lib/encryption/EncryptionController';
+import { PlatformsContext } from './PlatformsAPI/platformsContext';
+import { AccountSelectedContext } from '../Panel/Accounts/accountSelectedContext';
+import './PlatformsAPI/platformAPITypes';
 
 // Create a context and use it within the component
 export const PlatformAPIContext = React.createContext({
@@ -47,6 +49,11 @@ const bybitAPIPassKey = "dghk58fjo38jf2";
 
 
 export function BybitPlatfomAPIContextProvider({ children }) {
+    const accountSelectedContext = useContext(AccountSelectedContext);
+    const platformsContext = useContext(PlatformsContext);
+
+    const [platformAPI, setPlatformAPI] = useState(platformsContext.getPlatformEndpointsByName("Bybit"));
+    
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
     const [demoTrading, setDemoTrading] = useState(false);
@@ -55,36 +62,59 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     const [passkey, setPassKey] = useState("");
 
     useEffect(() => {
-        setInitialized(false);
-        const logIn = async () => {
-            try {
-                const apiKey = localStorage.getItem(bybitAPIKeyStorageKey);
-                const apiSecret = localStorage.getItem(bybitAPISecretStorageKey);
-                const passKey = decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey));
-                const demoTrading = localStorage.getItem("demoTrading");
-
-                const responce = await checkPassword(apiKey, apiSecret, passKey, demoTrading);
-                if(responce != undefined){
-                    setPassKey(undefined);
-                }else{
-                    setapiKey(apiKey);
-                    setapiSecret(apiSecret);
-                    setDemoTrading(demoTrading);
-                }
-
-            } catch (error) {
-                console.error(error);
-            }
-
-            setInitialized(true);
-        }
-        
-        logIn();
-        
-    }, []);
+        platformAPI.getTickerPricing();
+    }, [platformAPI]);
 
     if(!isInitialized)
         return;
+
+    // TODO: complete changing the platform
+    // TODO: we probably need to rethink how we process the password. Compare with a hash of the password, not API call!
+    // useEffect(() => {
+    //     if(accountSelectedContext.getAccountData()?.platformName == undefined){
+    //         return;
+    //     }
+    //     console.log("accountSelectedContext.getAccountData()", accountSelectedContext.getAccountData());
+        
+    //     setPlatformAPI(accountSelectedContext.getAccountData()?.platformName);
+    // }, [accountSelectedContext]);
+
+    // useEffect(() => {
+    //     setInitialized(false);
+
+    //     if(platformAPI == undefined){
+    //         return;
+    //     }
+
+    //     const logIn = async () => {
+    //         try {
+    //             const apiKey = localStorage.getItem(bybitAPIKeyStorageKey);
+    //             const apiSecret = localStorage.getItem(bybitAPISecretStorageKey);
+    //             const passKey = decryptData("passkey", sessionStorage.getItem(bybitAPIPassKey));
+    //             const demoTrading = localStorage.getItem("demoTrading");
+
+    //             const responce = await checkPassword(apiKey, apiSecret, passKey, demoTrading);
+    //             if(responce != undefined){
+    //                 setPassKey(undefined);
+    //             }else{
+    //                 setapiKey(apiKey);
+    //                 setapiSecret(apiSecret);
+    //                 setDemoTrading(demoTrading);
+    //             }
+
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+
+    //         setInitialized(true);
+    //     }
+        
+    //     logIn();
+        
+    // }, [platformAPI]);
+
+    // if(!isInitialized)
+    //     return;
 
     async function handleSetAPICredentials(apiKey, apiSecret, password, demoTrading){
         const enctypredAPIKey = encryptData(password, apiKey);
@@ -121,7 +151,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
 
         // TODO: add error message handling!
         try {
-            const result = await submitOrder(
+            const result = await platformAPI?.submitOrder(
                 params.ticker,
                 "Short",
                 params.orderType,
@@ -156,7 +186,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
 
         // TODO: add error message handling!
         try {
-            const result = await submitOrder(
+            const result = await platformAPI?.submitOrder(
                 params.ticker,
                 "Long",
                 params.orderType,
@@ -179,7 +209,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
 
     async function handleGetTickerInfo(ticker){
         try {
-            return await getTickerInfo(ticker);
+            return await platformAPI?.getTickerInfo(ticker);
         } catch (error) {
             console.log(error);
         }
@@ -187,7 +217,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     
     async function handleGetTickerPricing(ticker){
         try {
-            return await getTickerPricing(ticker);
+            return await platformAPI?.getTickerPricing(ticker);
         } catch (error) {
             console.log(error);
         }
@@ -236,14 +266,14 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         }
 
         // Try to create a client
-        await createClient(decodedApiKey, decodedApiSecret, demoTrading);
+        await platformAPI?.createClient(decodedApiKey, decodedApiSecret, demoTrading);
 
         console.log("decodedApiKey", decodedApiKey);
         console.log("decodedApiSecret", decodedApiSecret);
         console.log("demoTrading", demoTrading);
         
         // Verify credentials
-        const responce = await getAccountInfo();
+        const responce = await platformAPI?.getAccountInfo();
 
         console.log("responce", responce);
 
