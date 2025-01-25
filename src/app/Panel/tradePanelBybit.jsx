@@ -15,12 +15,14 @@ import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
 import { messageVariant, SideToastContext } from './messageManager/messageManager';
 import { Size } from '@/lib/UIComponents/uiCommon';
+import { AccountSelectedContext } from './Accounts/accountSelectedContext';
 
 const dataSaveKey = "tradingPanelInputs";
 
 export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
   const sideToastContext = useContext(SideToastContext);
+  const accountSelectedContext = useContext(AccountSelectedContext);
   // const [_, setRedraw] = useReducer(s => s + 1, 0);
   const inputDataRef = useRef();
   const [inputDataValid, setInputDataValid] = useState({});
@@ -175,9 +177,9 @@ export default function TradePanelBybit() {
   return (
     <>
       { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
-        <Panel headerTitle="Bybit" headerContent={(
+        <Panel headerTitle={accountSelectedContext.getAccountData()?.title ?? "Panel"} headerContent={(
           <>
-            {platformAPIContext.isDemoTrading && <a className={Styles.warnText}>Demo trading</a>}
+            {accountSelectedContext.getAccountData()?.isDemoAccount && <a className={Styles.warnText}>Demo trading</a>}
             <ButtonIcon src="settings.svg" quiet={true} size={Size.S} onClick={() => setOpenSettings((s) => !s)}/>
           </>
         )}>

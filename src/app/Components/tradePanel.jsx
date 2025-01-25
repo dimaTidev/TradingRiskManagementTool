@@ -4,8 +4,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import Styles from "./tradePanel.module.css";
 import InfoField from './infoField';
 import InputField from './inputField';
-import ActionButton, { Variant } from '@/lib/UIComponents/ActionButton';
-import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
+import ActionButton from '@/lib/UIComponents/ActionButton';
+import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
+import { Size, Variant } from '@/lib/UIComponents/uiCommon';
 import ToggleField from './toggleField';
 import { PlatformAPIContext } from './platformAPIContext';
 import { calculateRiskOrder, roundNumber } from './tradeUtils';
@@ -226,14 +227,14 @@ export default function TradePanel() {
 
                 <hr/>
                 <div className={Styles.buttons}>
-                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Limit")} disabled={disabledButtons}>Long Limit</ActionButton>
-                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Limit")} disabled={disabledButtons}>Short Limit</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitLongOrder("Limit")} disabled={disabledButtons}>Long Limit</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitShortOrder("Limit")} disabled={disabledButtons}>Short Limit</ActionButton>
                 </div>
 
                 <hr/>
                 <div className={Styles.buttons}>
-                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Market")} disabled={disabledButtons}>Long Market</ActionButton>
-                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Market")} disabled={disabledButtons}>Short Market</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitLongOrder("Market")} disabled={disabledButtons}>Long Market</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitShortOrder("Market")} disabled={disabledButtons}>Short Market</ActionButton>
                 </div>
 
                 {disabledButtons && <div className={Styles.warnText}>{warningDisableMessage}</div>}

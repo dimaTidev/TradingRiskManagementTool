@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { AccountsContext } from './accountsContext';
 
 export const AccountSelectedContext = React.createContext({
     setAccountGUID(guid){},
-    selectedAccountGUID: undefined
+    getAccountData(){},
+    selectedAccountGUID: undefined,
 });
 
 export function AccountSelectedContextProvider({ children, saveKey = "selectedAccount" }) {
+    const accountsContext = useContext(AccountsContext);
     const [selectedAccountGUID, setSelectedAccountGUID] = useState(undefined);
 
     useEffect(() => {
@@ -19,9 +22,14 @@ export function AccountSelectedContextProvider({ children, saveKey = "selectedAc
         localStorage.setItem(saveKey, guid);
     }
 
+    function getAccountData(){
+        return accountsContext.getAccountForGUID(selectedAccountGUID);
+    }
+
     return (
         <AccountSelectedContext.Provider value={{
             setAccountGUID,
+            getAccountData,
             selectedAccountGUID
         }}>
             {children}

@@ -12,6 +12,7 @@ export const AccountsContext = React.createContext({
     createAccount(params){},
     removeAccount(guid){},
     decryptAccount(data){},
+    getAccountForGUID(guid){},
     allAccounts: []
 });
 
@@ -47,7 +48,12 @@ export function AccountsContextProvider({ children }) {
 
     // TODO: add a password for decryption
     function decryptAccount(data){
+        
         return decryptData("33", data);
+    }
+
+    function getAccountForGUID(guid){
+        return accounts.current?.has(guid) ? decryptData("33", accounts.current.get(guid)) : undefined;
     }
 
     function createAccount(params){
@@ -85,9 +91,10 @@ export function AccountsContextProvider({ children }) {
             createAccount,
             removeAccount,
             allAccounts: Array.from(accounts.current, ([name, value]) => (value)),
-            decryptAccount
+            decryptAccount,
+            getAccountForGUID
         }}>
-            <TestAccountsContextProvider/>
+            {/* <TestAccountsContextProvider/> */}
             {children}
         </AccountsContext.Provider>
     )

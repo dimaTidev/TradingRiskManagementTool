@@ -6,18 +6,21 @@ import TradePanelBybit from "./Panel/tradePanelBybit";
 import { SideToastContextProvider } from "./Panel/messageManager/messageManager";
 import TestUIComponents from "@/lib/UIComponents/Test";
 import { AccountsContextProvider } from "./Panel/Accounts/accountsContext";
+import { AccountSelectedContextProvider } from "./Panel/Accounts/accountSelectedContext";
 
 export default function Home() {
   return (
     <div className={Styles.page}>
-      <AccountsContextProvider/>
       {/* <TestUIComponents/> */}
-      {/* <SideToastContextProvider>
-        <BybitPlatfomAPIContextProvider>
-          
-          <TradePanelBybit/>
-        </BybitPlatfomAPIContextProvider>
-      </SideToastContextProvider> */}
+      <AccountsContextProvider>
+        <AccountSelectedContextProvider>
+          <SideToastContextProvider>
+            <BybitPlatfomAPIContextProvider>
+              <TradePanelBybit/>
+            </BybitPlatfomAPIContextProvider>
+          </SideToastContextProvider>
+        </AccountSelectedContextProvider>
+      </AccountsContextProvider>
     </div>
   );
 }

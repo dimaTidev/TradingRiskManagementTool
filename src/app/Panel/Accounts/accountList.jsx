@@ -17,6 +17,13 @@ export default function AccountList(params){
 
     function handleDeleteEntry(guid){
         accountsContext.removeAccount(guid);
+
+        console.log("delete", guid, accountSelectedContext.selectedAccountGUID);
+        
+        if(guid === accountSelectedContext.selectedAccountGUID){
+            console.log("Sets new account guid", JSON.stringify(accountsContext.decryptAccount(accountsContext.allAccounts[0])), accountsContext.allAccounts.length > 0 ? accountsContext.decryptAccount(accountsContext.allAccounts[0])?.guid : undefined);
+            accountSelectedContext.setAccountGUID(accountsContext.allAccounts.length > 0 ? accountsContext.decryptAccount(accountsContext.allAccounts[0])?.guid : undefined);
+        }
     }
 
     function handleSelectEntry(guid){
@@ -88,6 +95,7 @@ export function AccountCreationButton(){
 
 export function ConnectAccountForm({onCompleted}) {
     const accountsContext = useContext(AccountsContext);
+    const accountSelectedContext = useContext(AccountSelectedContext);
 
     function handleSubmit(e){
         e.preventDefault();
@@ -101,7 +109,8 @@ export function ConnectAccountForm({onCompleted}) {
             }
         });
 
-        accountsContext.createAccount({...data});
+        const guid = accountsContext.createAccount({...data});
+        accountSelectedContext.setAccountGUID(guid);
 
         onCompleted?.();
     }

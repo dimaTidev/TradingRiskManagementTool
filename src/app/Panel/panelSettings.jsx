@@ -2,6 +2,7 @@ import ButtonIcon from "@/lib/UIComponents/ButtonIcon";
 import Styles from "./panelSetting.module.css";
 import { APICredentialsSettingsRemoveButton } from "./creadentials/credentials";
 import { Size } from "@/lib/UIComponents/uiCommon";
+import AccountList, { AccountCreationButton } from "./Accounts/accountList";
 
 export default function Settings({onClose, isAdvancedMode}) {
     return (
@@ -12,8 +13,11 @@ export default function Settings({onClose, isAdvancedMode}) {
                   <ButtonIcon src="close.svg" quiet={true} size={Size.L} onClick={onClose}/>
               </div> */}
               {/* <hr/> */}
+
+              <AccountList/>
+              <AccountCreationButton/>
       
-              <APICredentialsSettingsRemoveButton onRemoveCredentials={() => onClose?.()}/>
+              {/* <APICredentialsSettingsRemoveButton onRemoveCredentials={() => onClose?.()}/> */}
           </div>
       </div>
     )
