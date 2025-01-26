@@ -176,7 +176,7 @@ export default function TradePanelBybit() {
 
   return (
     <>
-      { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
+      {/* { platformAPIContext.CheckCredentialsAndPasswordSaved() ? ( */}
         <Panel headerTitle={accountSelectedContext.getAccountData()?.title ?? "Panel"} headerContent={(
           <>
             {accountSelectedContext.getAccountData()?.isDemoAccount && <a className={Styles.warnText}>Demo trading</a>}
@@ -232,12 +232,12 @@ export default function TradePanelBybit() {
           {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
           
         </Panel>
-      ) : (
+      {/* ) : (
         <Panel headerTitle="Bybit">
           <APICredentialsSettings/>
         </Panel>
       )  
-      }
+      } */}
     </>
     
   )
