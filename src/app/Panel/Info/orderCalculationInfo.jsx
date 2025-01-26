@@ -27,17 +27,16 @@ export default function OrderCalculationInfo(params) {
         <HorizontalInfo label="Volume" value={roundNumber(params.volume)?.toString()}/>
         <HorizontalInfo label="Margin" value={roundNumber(params.marginInDeal)?.toString()}/>
         <HorizontalInfo label="Asset vol" value={roundNumber(params.assetVolume, 10)?.toString()}/>
-        <hr/>
-        <HorizontalInfo label="EntryPrice" value={roundNumber(params.price)?.toString()}/>
-        <hr/>
-        <HorizontalInfo label="SLLong" value={roundNumber(params.stopLossPriceLong)?.toString()}/>
-        <HorizontalInfo label="TPLong" value={roundNumber(params.takeProfitPriceLong)?.toString()}/>
-        <hr/>
-        <HorizontalInfo label="SLShort" value={roundNumber(params.stopLossPriceShort)?.toString()}/>
-        <HorizontalInfo label="TPShort" value={roundNumber(params.takeProfitPriceShort)?.toString()}/>
-        <hr/>
         <HorizontalInfo label="Risk" value={roundNumber(params.risk)?.toString()}/>
         <HorizontalInfo label="Risk, %" value={`${roundNumber(params.riskPercent)?.toString()}%`}/>
+        <hr/>
+        <HorizontalInfo label="Long TP" value={roundNumber(params.takeProfitPriceLong)?.toString()}/>
+        <HorizontalInfo label="Entry" value={roundNumber(params.price)?.toString()}/>
+        <HorizontalInfo label="Long SL" value={roundNumber(params.stopLossPriceLong)?.toString()}/>
+        <hr/>
+        <HorizontalInfo label="Short SL" value={roundNumber(params.stopLossPriceShort)?.toString()}/>
+        <HorizontalInfo label="Entry" value={roundNumber(params.price)?.toString()}/>
+        <HorizontalInfo label="Short TP" value={roundNumber(params.takeProfitPriceShort)?.toString()}/>
     </div>
   )
 }
