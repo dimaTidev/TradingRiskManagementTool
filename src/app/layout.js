@@ -3,6 +3,7 @@ import "./globals.css";
 import "@/styles/darkTheme.css";
 import "@/styles/lightTheme.css";
 import "@/styles/alias.css";
+import "@/styles/utilityClasses.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

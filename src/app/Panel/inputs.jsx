@@ -117,10 +117,14 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                             }
                         }} 
                         placeholder="eg: 10000"
-                    />
+                    >
+                        <a className="u-text-secondary">
+                            $
+                        </a>
+                    </InputField>
                 </LabeledField>
 
-                <LabeledField label="Leverage, x" disabled={disabledLeverage}>
+                <LabeledField label="Leverage" disabled={disabledLeverage}>
                     <InputField type="number" value={leverage} onChange={(e) => {
                         if(e.target.value == undefined || e.target.value == ""){
                             setLeverage(e.target.value);
@@ -136,7 +140,12 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                         }
                     }} 
                     
-                    placeholder="eg: 20" disabled={disabledLeverage}/>
+                    placeholder="eg: 20" disabled={disabledLeverage}
+                    >
+                        <a className="u-text-secondary">
+                            x
+                        </a>
+                    </InputField>
                 </LabeledField>
             </div>
 
@@ -208,10 +217,15 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                     }} 
                     placeholder="eg: 1" 
                     disabled = {disabledTargetRisk}
-                />
+                    
+                    >
+                        <a className="u-text-secondary">
+                            $
+                        </a>
+                    </InputField>
                 </LabeledField>
 
-                <LabeledField label="%" disabled = {disabledTargetRisk}>
+                <LabeledField label="% from capital" disabled = {disabledTargetRisk}>
                     <InputField 
                         type="number" 
                         value={targetRiskPers} 
@@ -240,7 +254,11 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                         }} 
                         placeholder="eg: 1" 
                         disabled = {disabledTargetRisk}
-                    />
+                    >
+                        <a className="u-text-secondary">
+                            %
+                        </a>
+                    </InputField>
                 </LabeledField>
             </div>
             
@@ -260,8 +278,12 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
             </div>
 
                         
-            <LabeledField label="Stop loss, %" disabled={disabledStopLoss}>
-                <InputField type="number" value={stopLossPercent} step="0.05" onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40" disabled={disabledStopLoss}/>
+            <LabeledField label="Stop loss" disabled={disabledStopLoss}>
+                <InputField type="number" value={stopLossPercent} step="0.05" onChange={(e) => setStopLossPersent(e.target.value)} placeholder="eg: 0.40" disabled={disabledStopLoss}>
+                    <a className="u-text-secondary">
+                        %
+                    </a>
+                </InputField>
                 <div className={Styles.historyButtonsArray}>
                     <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.1)} disabled={disabledStopLoss}>0.1</button>
                     <button className={Styles.historyButton} onClick={() => setStopLossPersent(0.15)} disabled={disabledStopLoss}>0.15</button>
@@ -275,8 +297,13 @@ const Inputs = React.forwardRef(function Inputs({onTickerChanged, checkValidTick
                 </div>
             </LabeledField>
                                     
-            <LabeledField label="Take profit, RR" disabled={disabledTakeProfit}>
-                <InputField type="number" value={takeProfitRR} step="0.5" onChange={(e) => setTakeProfitRR(e.target.value)} placeholder="eg: 2" disabled={disabledTakeProfit}/>
+            <LabeledField label="Take profit" disabled={disabledTakeProfit}>
+                <InputField type="number" value={takeProfitRR} step="0.5" onChange={(e) => setTakeProfitRR(e.target.value)} placeholder="eg: 2" disabled={disabledTakeProfit}
+                    >
+                        <a className="u-text-secondary">
+                            RR
+                        </a>
+                </InputField>
             </LabeledField>
         </div>
     )
