@@ -207,10 +207,13 @@ export default function TradePanelBybit() {
                   defaultValues={loadedData}
                 />
                 <div className={Styles.rightSide}>
-                  <TickerInfo {...tickerInfoData}/>
-                  <OrderCalculationInfo {...orderData}/>
+                  <div className={Styles.infoContainer}>
+                    <TickerInfo {...tickerInfoData}/>
+                  </div>
+                  <div className={Styles.infoContainer}>
+                    <OrderCalculationInfo {...orderData}/>
+                  </div>
                 </div>
-                
               </div>
 
               <hr/>
