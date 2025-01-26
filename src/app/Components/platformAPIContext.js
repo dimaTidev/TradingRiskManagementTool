@@ -65,6 +65,11 @@ export function BybitPlatfomAPIContextProvider({ children }) {
         platformAPI.getTickerPricing();
     }, [platformAPI]);
 
+    // For some reason it resolves hydration issues
+    useEffect(() => {
+        setInitialized(true);
+    }, []);
+
     if(!isInitialized)
         return;
 
