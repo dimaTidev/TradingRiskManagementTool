@@ -54,10 +54,6 @@ export default function TradePanelBybit() {
     if(ticker != undefined && ticker != ""){
         const getTicker = async () => {
           try {
-
-            // if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
-            //   return;
-
             setIsLoading(true);
             const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);
             // TODO: handle error messages!
@@ -176,7 +172,6 @@ export default function TradePanelBybit() {
 
   return (
     <>
-      {/* { platformAPIContext.CheckCredentialsAndPasswordSaved() ? ( */}
         <Panel headerTitle={accountSelectedContext.getAccountData()?.title ?? "Panel"} headerContent={(
           <>
             {accountSelectedContext.getAccountData()?.isDemoAccount && <a className={Styles.warnText}>Demo trading</a>}

@@ -36,9 +36,6 @@ export default function TradePanel() {
             return;
         }
 
-        if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
-            return;
-
         const responceTicker = await platformAPIContext.getTickerInfo(ticker);
         const responceTickerPrice = await platformAPIContext.getTickerPricing(ticker);
 
@@ -156,15 +153,15 @@ export default function TradePanel() {
         <div className={Styles.panel}>
             <div className={Styles.header}>
                 <a className={Styles.headerFont}>Bybit</a>
-                {platformAPIContext.isDemoTrading && <a className={Styles.warnText}>Demo trading</a>}
-                {platformAPIContext.CheckCredentialsAndPasswordSaved() && <>
+                <a className={Styles.warnText}>Demo trading</a>
+                <>
                     <ButtonIcon src="settings.svg" quiet={true} size={Size.L} onClick={() => setOpenSettings(true)}>Settings {openSettings}</ButtonIcon>
                     {openSettings && <Settings onClose={() => setOpenSettings(false)} isAdvancedMode={isAdvancedMode} setAdvancedMode={setAdvancedMode}/>}
-                </>}
+                </>
             </div>
             <hr/>
 
-            {platformAPIContext.CheckCredentialsAndPasswordSaved() && <>
+            <>
                 <InputField type="number" value={capital} onChange={(e) => setCapital(e.target.value)} label="Capital"/>
                 <InputField type="number" value={targetRisk} onChange={(e) => setTargetRisk(e.target.value)} label="Target Risk, %"/>
                 <InfoField label="Risk capital" text={riskCapital.toString()}/>
@@ -238,10 +235,8 @@ export default function TradePanel() {
                 </div>
 
                 {disabledButtons && <div className={Styles.warnText}>{warningDisableMessage}</div>}
-                
-            </>}
+            </>
 
-            {!platformAPIContext.CheckCredentialsAndPasswordSaved() && <APICredentialsSettings/>}
         </div>
     )
 }
