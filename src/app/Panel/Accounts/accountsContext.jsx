@@ -6,6 +6,7 @@ import AccountList, { AccountCreationButton } from './accountList';
 import InputField from '@/lib/UIComponents/InputField';
 import { encryptData, decryptData } from '@/lib/encryption/EncryptionController';
 import { TestAccountsContextProvider } from './testAccountsContextProvider';
+import bcrypt from 'bcryptjs';
 // import { decryptData, encryptData } from '@/lib/encryption/EncryptionController';
 
 export const AccountsContext = React.createContext({
@@ -13,19 +14,35 @@ export const AccountsContext = React.createContext({
     removeAccount(guid){},
     decryptAccount(data){},
     getAccountForGUID(guid){},
-    allAccounts: []
+    allAccounts: [],
+
+    createPasswordAsync(passkey){},
+    checkAndSetPasswordAsync(passkey){},
+    isPasswordSaved: false,
+    isPasswordChecked: false,
 });
 
 const connectedAccountsKey = "vm49idfji31nf03jc66tgg";
+const accPassSaveKey = "234590tugj29j0ncjlewd3";
 
 export function AccountsContextProvider({ children }) {
     const [_, setRedraw] = useReducer(s => s + 1, 0);
     const accounts = useRef(new Map());
+    const [passKey, setPassKey] = useState(undefined);
+
+    // // TODO: remove this. It is here only for the test purpose
+    // useEffect(() => {
+    //     localStorage.removeItem(accPassSaveKey);
+    // }, []);
 
     useEffect(() => {
+        if(passKey == undefined){
+            return;
+        }
+        
         accounts.current = loadAccounts();
         setRedraw();
-    }, []);
+    }, [passKey]);
 
     function saveAccounts(map){
         const object = Object.fromEntries(map);
@@ -46,14 +63,12 @@ export function AccountsContextProvider({ children }) {
         return new Map();
     }
 
-    // TODO: add a password for decryption
     function decryptAccount(data){
-        
-        return decryptData("33", data);
+        return decryptData(passKey, data);
     }
 
     function getAccountForGUID(guid){
-        return accounts.current?.has(guid) ? decryptData("33", accounts.current.get(guid)) : undefined;
+        return accounts.current?.has(guid) ? decryptData(passKey, accounts.current.get(guid)) : undefined;
     }
 
     function createAccount(params){
@@ -61,7 +76,7 @@ export function AccountsContextProvider({ children }) {
         params = {guid: guid, ...params};
 
         // TODO: add a password for encryption
-        params = encryptData("33", params);
+        params = encryptData(passKey, params);
 
         accounts.current.set(guid, params);
 
@@ -86,13 +101,79 @@ export function AccountsContextProvider({ children }) {
         return true;
     }
 
+    async function createPasswordAsync(password){
+        if(password == undefined || password == ""){
+            return false;
+        }
+
+        const resultHash = await makeHash(password);
+
+        if(resultHash == undefined){
+            return false;
+        }
+
+        localStorage.setItem(accPassSaveKey, resultHash);
+        setPassKey(password);
+        console.log("password saved:", resultHash);
+
+
+        return true;
+    }
+
+    async function checkAndSetPasswordAsync(password){
+        if(password == undefined || password == ""){
+            return false;
+        }
+
+        const resultHash = localStorage.getItem(accPassSaveKey);
+        const isValid = await validateHash(password, resultHash);
+
+        if(isValid){
+            setPassKey(password);
+        }
+        
+        return isValid;
+    }
+
+    async function makeHash(value) {
+        try {
+            // Generate a salt to hash the value
+            const salt = await bcrypt.genSalt(10);
+            
+            // Hash the value with the salt
+            const hashedValue = await bcrypt.hash(value, salt);
+    
+            return hashedValue;
+        } catch (error) {
+            console.error('Error hashing:', error);
+            // throw error;
+        }
+
+        return undefined;
+    }
+
+    async function validateHash(enteredValue, hash){
+        try {
+            const isValid = await bcrypt.compare(enteredValue, hash);
+            return isValid;
+        } catch (error) {
+            console.error('Error validating password:', error);
+            // throw error;
+        }
+        return false;
+    }
+
     return (
         <AccountsContext.Provider value={{
             createAccount,
             removeAccount,
             allAccounts: Array.from(accounts.current, ([name, value]) => (value)),
             decryptAccount,
-            getAccountForGUID
+            getAccountForGUID,
+            createPasswordAsync,
+            checkAndSetPasswordAsync,
+            isPasswordSaved: localStorage.getItem(accPassSaveKey) ? true : false,
+            isPasswordChecked: passKey != undefined,
         }}>
             {/* <TestAccountsContextProvider/> */}
             {children}

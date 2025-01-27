@@ -39,7 +39,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     const accountSelectedContext = useContext(AccountSelectedContext);
     const platformsContext = useContext(PlatformsContext);
 
-    const [platformAPI, setPlatformAPI] = useState(platformsContext.getPlatformEndpointsByName("bybit"));
+    const [platformAPI, setPlatformAPI] = useState();
     
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
@@ -50,9 +50,9 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     // }, [platformAPI]);
 
     // For some reason it resolves hydration issues
-    // useEffect(() => {
-    //     setInitialized(true);
-    // }, []);
+    useEffect(() => {
+        setInitialized(true);
+    }, []);
 
     // TODO: complete changing the platform
     // TODO: we probably need to rethink how we process the password. Compare with a hash of the password, not API call!
@@ -183,6 +183,10 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     }
 
     async function handleGetTickerInfo(ticker){
+        if(platformAPI == undefined){
+            return {};
+        }
+
         try {
             return await platformAPI?.getTickerInfo(ticker);
         } catch (error) {
@@ -191,6 +195,10 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     }
     
     async function handleGetTickerPricing(ticker){
+        if(platformAPI == undefined){
+            return {};
+        }
+        
         try {
             return await platformAPI?.getTickerPricing(ticker);
         } catch (error) {

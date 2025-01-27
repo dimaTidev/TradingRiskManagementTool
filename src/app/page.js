@@ -8,6 +8,7 @@ import TestUIComponents from "@/lib/UIComponents/Test";
 import { AccountsContextProvider } from "./Panel/Accounts/accountsContext";
 import { AccountSelectedContextProvider } from "./Panel/Accounts/accountSelectedContext";
 import { PlatformsContextProvider } from "./Components/PlatformsAPI/platformsContext";
+import CheckAccountsPassword from "./Panel/Accounts/checkAccountPassword";
 
 export default function Home() {
   return (
@@ -23,10 +24,12 @@ export default function Home() {
                   <TradePanelBybit/>
                 </BybitPlatfomAPIContextProvider>
 
+                <CheckAccountsPassword/>
+
             </AccountSelectedContextProvider>
           </AccountsContextProvider>
         </PlatformsContextProvider>
-        
+
       </SideToastContextProvider>
     </div>
   );

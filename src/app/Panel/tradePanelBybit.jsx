@@ -68,7 +68,7 @@ export default function TradePanelBybit() {
       
       getTicker();
     }
-  }, [ticker]);
+  }, [platformAPIContext, ticker]);
 
   // const inputData = inputDataRef.current?.getInputData();
 

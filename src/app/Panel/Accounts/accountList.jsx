@@ -10,6 +10,7 @@ import SimpleModal from "./simpleModal";
 import InputField from "@/lib/UIComponents/InputField";
 import Panel from "@/lib/UIComponents/panel";
 import { AccountSelectedContext } from "./accountSelectedContext";
+import CreateAccountsPassword from "./createAccountsPassword";
 
 export default function AccountList(params){
     const accountsContext = useContext(AccountsContext);
@@ -96,6 +97,7 @@ export function AccountCreationButton(){
 export function ConnectAccountForm({onCompleted}) {
     const accountsContext = useContext(AccountsContext);
     const accountSelectedContext = useContext(AccountSelectedContext);
+    const [form, setForm] = useState(undefined);
 
     function handleSubmit(e){
         e.preventDefault();
@@ -109,6 +111,21 @@ export function ConnectAccountForm({onCompleted}) {
             }
         });
 
+        setForm(data);
+
+        if(accountsContext.isPasswordSaved){
+            createAccount(data);
+        }
+    }
+
+    function createAccount(data){
+        data ??= form;
+
+        if(data == undefined){
+            console.error("Error creating a password");
+            return;
+        }
+
         const guid = accountsContext.createAccount({...data});
         accountSelectedContext.setAccountGUID(guid);
 
@@ -116,21 +133,27 @@ export function ConnectAccountForm({onCompleted}) {
     }
 
     return (
-        <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-            <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-                <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-                    <select name="platformName">
-                        <option value="bybit">Bybit</option>
-                    </select>
-                    <InputField name="title" placeholder='title' required/>
-                    <InputField name="notes" placeholder='notes' />
-                    <InputField name="apiKey" placeholder='API key' required/>
-                    <InputField name="apiSecret"placeholder='API secret' required/>
-                    <InputField name="isDemoAccount" type="checkbox" placeholder='demo'/>
-                </div>
+        <>
+            <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
+                <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "6px"}}>
+                    <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
+                        <select name="platformName">
+                            <option value="bybit">Bybit</option>
+                        </select>
+                        <InputField name="title" placeholder='title' required/>
+                        <InputField name="notes" placeholder='notes' />
+                        <InputField name="apiKey" placeholder='API key' required/>
+                        <InputField name="apiSecret"placeholder='API secret' required/>
+                        <InputField name="isDemoAccount" type="checkbox" placeholder='demo'/>
+                    </div>
 
-                <Button size={Size.S} type="submit">Add account</Button>
-            </form>
-        </div>
+                    <hr/>
+                    <Button size={Size.S} type="submit">Add account</Button>
+                </form>
+            </div> 
+
+            {form && !accountsContext.isPasswordSaved && <CreateAccountsPassword onClose={() => setForm(undefined)} onCompleted={() => {createAccount}}/>}
+        </>
+       
     )
 }
