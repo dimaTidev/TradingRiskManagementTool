@@ -13,17 +13,21 @@ export default function Home() {
   return (
     <div className={Styles.page}>
       {/* <TestUIComponents/> */}
-      <PlatformsContextProvider>
-        <AccountsContextProvider>
-          <AccountSelectedContextProvider>
-            <SideToastContextProvider>
-              <BybitPlatfomAPIContextProvider>
-                <TradePanelBybit/>
-              </BybitPlatfomAPIContextProvider>
-            </SideToastContextProvider>
-          </AccountSelectedContextProvider>
-        </AccountsContextProvider>
-      </PlatformsContextProvider>
+      <SideToastContextProvider>
+
+        <PlatformsContextProvider>
+          <AccountsContextProvider>
+            <AccountSelectedContextProvider>
+
+                <BybitPlatfomAPIContextProvider>
+                  <TradePanelBybit/>
+                </BybitPlatfomAPIContextProvider>
+
+            </AccountSelectedContextProvider>
+          </AccountsContextProvider>
+        </PlatformsContextProvider>
+        
+      </SideToastContextProvider>
     </div>
   );
 }

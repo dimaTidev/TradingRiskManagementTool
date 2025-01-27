@@ -5,7 +5,7 @@ import * as BybitAPI from './bybit';
 import * as Types from "./platformAPITypes.js"
 
 const platforms = new Map();
-platforms.set("Bybit", BybitAPI);
+platforms.set("bybit", BybitAPI);
 
 const platformNames = [];
 platforms.forEach((value, key) => platformNames.push(key)); 

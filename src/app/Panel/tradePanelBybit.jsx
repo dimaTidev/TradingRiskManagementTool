@@ -55,8 +55,8 @@ export default function TradePanelBybit() {
         const getTicker = async () => {
           try {
 
-            if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
-              return;
+            // if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
+            //   return;
 
             setIsLoading(true);
             const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);

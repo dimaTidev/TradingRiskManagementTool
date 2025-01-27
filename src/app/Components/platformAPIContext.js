@@ -8,7 +8,6 @@ import './PlatformsAPI/platformAPITypes';
 
 // Create a context and use it within the component
 export const PlatformAPIContext = React.createContext({
-    setAPICredentials(apiKey, apiSecret, password){},
     /**
      * @param {Object} params 
      * @param {string} params.ticker 
@@ -33,8 +32,12 @@ export const PlatformAPIContext = React.createContext({
     placeLongOrder(params){},
     getTickerInfo(ticker){}, 
     getTickerPricing(ticker){},
+
+
+    setAPICredentials(apiKey, apiSecret, password){},
     CheckCredentialsSaved: false,
     CheckCredentialsAndPasswordSaved: false,
+
     deleteCredentials(){},
     setPassword(passkey){},
     isDemoTrading: false
@@ -52,37 +55,46 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     const accountSelectedContext = useContext(AccountSelectedContext);
     const platformsContext = useContext(PlatformsContext);
 
-    const [platformAPI, setPlatformAPI] = useState(platformsContext.getPlatformEndpointsByName("Bybit"));
+    const [platformAPI, setPlatformAPI] = useState(platformsContext.getPlatformEndpointsByName("bybit"));
     
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
+
     const [demoTrading, setDemoTrading] = useState(false);
     const [apiKey, setapiKey] = useState("");
     const [apiSecret, setapiSecret] = useState("");
     const [passkey, setPassKey] = useState("");
 
-    useEffect(() => {
-        platformAPI.getTickerPricing();
-    }, [platformAPI]);
+    // TODO: why it is here?
+    // useEffect(() => {
+    //     platformAPI.getTickerPricing();
+    // }, [platformAPI]);
 
     // For some reason it resolves hydration issues
-    useEffect(() => {
-        setInitialized(true);
-    }, []);
-
-    if(!isInitialized)
-        return;
+    // useEffect(() => {
+    //     setInitialized(true);
+    // }, []);
 
     // TODO: complete changing the platform
     // TODO: we probably need to rethink how we process the password. Compare with a hash of the password, not API call!
-    // useEffect(() => {
-    //     if(accountSelectedContext.getAccountData()?.platformName == undefined){
-    //         return;
-    //     }
-    //     console.log("accountSelectedContext.getAccountData()", accountSelectedContext.getAccountData());
-        
-    //     setPlatformAPI(accountSelectedContext.getAccountData()?.platformName);
-    // }, [accountSelectedContext]);
+    useEffect(() => {
+        if(accountSelectedContext.getAccountData()?.platformName == undefined){
+            return;
+        }
+
+        const apiEndpoints = platformsContext.getPlatformEndpointsByName(accountSelectedContext.getAccountData()?.platformName);
+        const accountData = accountSelectedContext.getAccountData();
+
+        apiEndpoints.createClient(accountData.apiKey, accountData.apiSecret, accountData.isDemoAccount);
+        setPlatformAPI(apiEndpoints);
+
+        // console.log("Setting up the api:", accountData.apiKey, accountData.apiSecret, accountData.isDemoAccount);
+        setInitialized(true);
+
+    }, [accountSelectedContext, platformsContext]);
+
+    if(!isInitialized)
+        return;
 
     // useEffect(() => {
     //     setInitialized(false);

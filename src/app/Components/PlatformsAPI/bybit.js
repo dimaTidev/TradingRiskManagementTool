@@ -37,6 +37,7 @@ export function deleteClient(){
 export async function submitOrder(symbol, side, orderType, qty, leverage, price, takeProfit, stopLoss){
 
     if(client == undefined){
+        console.error("The bybit client is not defined");
         return {
             isError: true,
             error: "The bybit client is not defined"
@@ -139,6 +140,7 @@ export async function submitOrder(symbol, side, orderType, qty, leverage, price,
 
 export async function getTickerPricing(symbol){
     if(client == undefined){
+        console.error("The bybit client is not defined");
         return {
             isError: true,
             error: "The bybit client is not defined"
@@ -173,6 +175,7 @@ export async function getTickerPricing(symbol){
 
 export async function getTickerInfo(symbol){
     if(client == undefined){
+        console.error("The bybit client is not defined");
         return {
             isError: true,
             error: "The bybit client is not defined"
@@ -230,6 +233,7 @@ export async function getTickerInfo(symbol){
 
 export async function getAccountInfo(){
     if(client == undefined){
+        console.error("The bybit client is not defined");
         return {
             isError: true,
             error: "The bybit client is not defined"
