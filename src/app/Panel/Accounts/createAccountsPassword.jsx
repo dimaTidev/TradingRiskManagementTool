@@ -34,7 +34,7 @@ export default function CreateAccountsPassword({onClose, onCompleted}) {
         <Panel headerTitle="Create password" onClose={() => onClose?.()}>
                 <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "6px"}}>
                     <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-                        <InputField name="password" placeholder='Enter a password' required/>
+                        <InputField name="password" autoComplete="off" placeholder='Enter a password' required/>
                         <Callout variant={Variant.SECONDARY}>Make up a password to encrypt your API key and secret. Later you will need to enter this password to decrypt your credentials</Callout>
                     </div>
 

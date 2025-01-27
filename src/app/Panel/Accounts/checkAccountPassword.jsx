@@ -38,7 +38,7 @@ export default function CheckAccountsPassword({onCompleted}) {
                 <Panel headerTitle="Unlock accounts">
                     <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "6px"}}>
                         <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
-                            <InputField name="password" placeholder='Enter the password' required/>
+                            <InputField name="password" autoComplete="off" placeholder='Enter the password' required/>
                             <Callout variant={Variant.SECONDARY}>Enter the password</Callout>
                         </div>
 

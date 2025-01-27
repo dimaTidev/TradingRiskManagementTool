@@ -142,8 +142,8 @@ export function ConnectAccountForm({onCompleted}) {
                         </select>
                         <InputField name="title" placeholder='title' required/>
                         <InputField name="notes" placeholder='notes' />
-                        <InputField name="apiKey" placeholder='API key' required/>
-                        <InputField name="apiSecret"placeholder='API secret' required/>
+                        <InputField name="apiKey" placeholder='API key' autoComplete="off" required/>
+                        <InputField name="apiSecret"placeholder='API secret' autoComplete="off" required/>
                         <InputField name="isDemoAccount" type="checkbox" placeholder='demo'/>
                     </div>
 
