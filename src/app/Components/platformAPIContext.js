@@ -43,7 +43,7 @@ export function BybitPlatfomAPIContextProvider({ children }) {
     //const [_, setRedraw] = useReducer(s => s + 1, 0);
     const [isInitialized, setInitialized] = useState(false);
 
-    // For some reason it resolves hydration issues
+    // TODO: For some reason it resolves hydration issues
     useEffect(() => {
         setInitialized(true);
     }, []);
