@@ -1,13 +1,9 @@
 'use client'
 
-import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid';
-import AccountList, { AccountCreationButton } from './accountList';
-import InputField from '@/lib/UIComponents/InputField';
 import { encryptData, decryptData } from '@/lib/encryption/EncryptionController';
-import { TestAccountsContextProvider } from './testAccountsContextProvider';
 import bcrypt from 'bcryptjs';
-// import { decryptData, encryptData } from '@/lib/encryption/EncryptionController';
 
 export const AccountsContext = React.createContext({
     createAccount(params){},
@@ -75,7 +71,6 @@ export function AccountsContextProvider({ children }) {
         const guid = uuidv4();
         params = {guid: guid, ...params};
 
-        // TODO: add a password for encryption
         params = encryptData(passKey, params);
 
         accounts.current.set(guid, params);

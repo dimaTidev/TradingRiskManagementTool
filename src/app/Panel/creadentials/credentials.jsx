@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import Styles from "./credentials.module.css";
-import { PlatformAPIContext } from "@/app/Components/platformAPIContext";
 import ButtonIcon from "@/lib/UIComponents/ButtonIcon";
 import InputField from "@/app/Components/inputField";
 import ToggleField from "@/app/Components/toggleField";
@@ -44,14 +43,12 @@ export function APICredentialsSettings() {
 }
 
 export function APICredentialsSettingsRemoveButton({onRemoveCredentials}) {
-    const platformAPIContext = useContext(PlatformAPIContext);
     const sideToastContext = useContext(SideToastContext);
 
   return (
         <div className={`${Styles.credentialSettings} ${Styles.dangerField}`} style={{flexDirection: "row", alignItems: "center"}}>
             Remove API key and secret 
             <ButtonIcon size={Size.S} src="delete.svg" onClick={() => {
-                // TODO: delete credentials here
                 onRemoveCredentials?.();
                 sideToastContext.showMessage("Account removed", "Account removed successfuly", messageVariant.SUCCESS);
             }}/>
@@ -60,7 +57,6 @@ export function APICredentialsSettingsRemoveButton({onRemoveCredentials}) {
 }
 
 export function UnlockCredentialsField() {
-    const platformAPIContext = useContext(PlatformAPIContext);
     const [apiPass, setApiPass] = useState("");
     
   return (
