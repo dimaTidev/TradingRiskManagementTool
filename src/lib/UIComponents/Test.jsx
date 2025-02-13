@@ -4,6 +4,13 @@ import { Size, Variant } from './uiCommon'
 import ButtonIcon from './ButtonIcon'
 import Button from './Button';
 import Icon from './icon';
+import Callout from './callout';
+
+const styleVertical = {
+    display: "flex",
+    flexDirection: "column",
+    gap: "8px"
+}
 
 export default function TestUIComponents() {
     
@@ -11,7 +18,7 @@ export default function TestUIComponents() {
 
   return (
     <div style={{display: "flex", flexDirection: "row", gap: "20px"}}>
-        <div>
+        <div style={styleVertical}>
             <ActionButton size={Size.S}>S</ActionButton>
             <ActionButton size={Size.M}>M</ActionButton>
             <ActionButton size={Size.L}>L</ActionButton>
@@ -32,7 +39,7 @@ export default function TestUIComponents() {
             <ActionButton variant={Variant.ERROR} disabled>ERROR</ActionButton>
         </div>
 
-        <div>
+        <div style={styleVertical}>
             <ButtonIcon src={icon} size={Size.S}>S</ButtonIcon>
             <ButtonIcon src={icon} size={Size.M}>M</ButtonIcon>
             <ButtonIcon src={icon} size={Size.L}>L</ButtonIcon>
@@ -54,7 +61,7 @@ export default function TestUIComponents() {
         </div>
 
 
-        <div>
+        <div style={styleVertical}>
             <Button src={icon} size={Size.S}>S</Button>
             <Button src={icon} size={Size.M}>M</Button>
             <Button src={icon} size={Size.L}>L</Button>
@@ -75,10 +82,19 @@ export default function TestUIComponents() {
             <Button src={icon} variant={Variant.ERROR} disabled>ERROR</Button>
         </div>
 
-        <div>
+        <div style={styleVertical}>
             <Icon src={icon} size={Size.S}>S</Icon>
             <Icon src={icon} size={Size.M}>M</Icon>
             <Icon src={icon} size={Size.L}>L</Icon>
+        </div>
+
+        <div style={styleVertical}>
+            <Callout variant={Variant.DEFAULT}>DEFAULT callout</Callout>
+            <Callout variant={Variant.PRIMARY}>PRIMARY callout</Callout>
+            <Callout variant={Variant.SECONDARY}>SECONDARY callout</Callout>
+            <Callout variant={Variant.WARNING}>WARNING callout</Callout>
+            <Callout variant={Variant.ERROR}>ERROR callout</Callout>
+            <Callout variant={Variant.SUCCESS}>SUCCESS callout</Callout>
         </div>
     </div>
   )

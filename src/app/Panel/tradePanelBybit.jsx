@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useContext, useEffect, useReducer, useRef, useState } from 'react'
-import Panel from './panel'
+import Panel from '@/lib/UIComponents/panel'
 import Styles from "./tradePanel.module.css";
 import OrderButtons from './orderButtons';
 import { PlatformAPIContext } from '../Components/platformAPIContext';
@@ -15,12 +15,14 @@ import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
 import { messageVariant, SideToastContext } from './messageManager/messageManager';
 import { Size } from '@/lib/UIComponents/uiCommon';
+import { AccountSelectedContext } from './Accounts/accountSelectedContext';
 
 const dataSaveKey = "tradingPanelInputs";
 
 export default function TradePanelBybit() {
   const platformAPIContext = useContext(PlatformAPIContext);
   const sideToastContext = useContext(SideToastContext);
+  const accountSelectedContext = useContext(AccountSelectedContext);
   // const [_, setRedraw] = useReducer(s => s + 1, 0);
   const inputDataRef = useRef();
   const [inputDataValid, setInputDataValid] = useState({});
@@ -52,10 +54,6 @@ export default function TradePanelBybit() {
     if(ticker != undefined && ticker != ""){
         const getTicker = async () => {
           try {
-
-            if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
-              return;
-
             setIsLoading(true);
             const responceTickerInfo = await platformAPIContext.getTickerInfo(ticker);
             // TODO: handle error messages!
@@ -70,7 +68,7 @@ export default function TradePanelBybit() {
       
       getTicker();
     }
-  }, [ticker]);
+  }, [platformAPIContext, ticker]);
 
   // const inputData = inputDataRef.current?.getInputData();
 
@@ -174,10 +172,9 @@ export default function TradePanelBybit() {
 
   return (
     <>
-      { platformAPIContext.CheckCredentialsAndPasswordSaved() ? (
-        <Panel headerTitle="Bybit" headerContent={(
+        <Panel headerTitle={accountSelectedContext.getAccountData()?.title ?? "Panel"} headerContent={(
           <>
-            {platformAPIContext.isDemoTrading && <a className={Styles.warnText}>Demo trading</a>}
+            {accountSelectedContext.getAccountData()?.isDemoAccount && <a className={Styles.warnText}>Demo trading</a>}
             <ButtonIcon src="settings.svg" quiet={true} size={Size.S} onClick={() => setOpenSettings((s) => !s)}/>
           </>
         )}>
@@ -230,12 +227,12 @@ export default function TradePanelBybit() {
           {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
           
         </Panel>
-      ) : (
+      {/* ) : (
         <Panel headerTitle="Bybit">
           <APICredentialsSettings/>
         </Panel>
       )  
-      }
+      } */}
     </>
     
   )

@@ -4,8 +4,9 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import Styles from "./tradePanel.module.css";
 import InfoField from './infoField';
 import InputField from './inputField';
-import ActionButton, { Variant } from '@/lib/UIComponents/ActionButton';
-import ButtonIcon, { Size } from '@/lib/UIComponents/ButtonIcon';
+import ActionButton from '@/lib/UIComponents/ActionButton';
+import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
+import { Size, Variant } from '@/lib/UIComponents/uiCommon';
 import ToggleField from './toggleField';
 import { PlatformAPIContext } from './platformAPIContext';
 import { calculateRiskOrder, roundNumber } from './tradeUtils';
@@ -34,9 +35,6 @@ export default function TradePanel() {
             console.error("The ticker cannot be undefined or empty!");
             return;
         }
-
-        if(!platformAPIContext.CheckCredentialsAndPasswordSaved())
-            return;
 
         const responceTicker = await platformAPIContext.getTickerInfo(ticker);
         const responceTickerPrice = await platformAPIContext.getTickerPricing(ticker);
@@ -155,15 +153,15 @@ export default function TradePanel() {
         <div className={Styles.panel}>
             <div className={Styles.header}>
                 <a className={Styles.headerFont}>Bybit</a>
-                {platformAPIContext.isDemoTrading && <a className={Styles.warnText}>Demo trading</a>}
-                {platformAPIContext.CheckCredentialsAndPasswordSaved() && <>
+                <a className={Styles.warnText}>Demo trading</a>
+                <>
                     <ButtonIcon src="settings.svg" quiet={true} size={Size.L} onClick={() => setOpenSettings(true)}>Settings {openSettings}</ButtonIcon>
                     {openSettings && <Settings onClose={() => setOpenSettings(false)} isAdvancedMode={isAdvancedMode} setAdvancedMode={setAdvancedMode}/>}
-                </>}
+                </>
             </div>
             <hr/>
 
-            {platformAPIContext.CheckCredentialsAndPasswordSaved() && <>
+            <>
                 <InputField type="number" value={capital} onChange={(e) => setCapital(e.target.value)} label="Capital"/>
                 <InputField type="number" value={targetRisk} onChange={(e) => setTargetRisk(e.target.value)} label="Target Risk, %"/>
                 <InfoField label="Risk capital" text={riskCapital.toString()}/>
@@ -226,21 +224,19 @@ export default function TradePanel() {
 
                 <hr/>
                 <div className={Styles.buttons}>
-                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Limit")} disabled={disabledButtons}>Long Limit</ActionButton>
-                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Limit")} disabled={disabledButtons}>Short Limit</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitLongOrder("Limit")} disabled={disabledButtons}>Long Limit</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitShortOrder("Limit")} disabled={disabledButtons}>Short Limit</ActionButton>
                 </div>
 
                 <hr/>
                 <div className={Styles.buttons}>
-                    <ActionButton variant={Variant.Default} onClick={() => submitLongOrder("Market")} disabled={disabledButtons}>Long Market</ActionButton>
-                    <ActionButton variant={Variant.Default} onClick={() => submitShortOrder("Market")} disabled={disabledButtons}>Short Market</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitLongOrder("Market")} disabled={disabledButtons}>Long Market</ActionButton>
+                    <ActionButton variant={Variant.DEFAULT} onClick={() => submitShortOrder("Market")} disabled={disabledButtons}>Short Market</ActionButton>
                 </div>
 
                 {disabledButtons && <div className={Styles.warnText}>{warningDisableMessage}</div>}
-                
-            </>}
+            </>
 
-            {!platformAPIContext.CheckCredentialsAndPasswordSaved() && <APICredentialsSettings/>}
         </div>
     )
 }

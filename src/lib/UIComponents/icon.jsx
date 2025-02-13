@@ -1,6 +1,7 @@
 import React from 'react'
 import StylesCommon from "./common.module.css";
 import Image from 'next/image';
+import { Size } from './uiCommon';
 
 export default function Icon({
     src,

@@ -1,0 +1,23 @@
+.card{
+    padding: 8px;
+    border-radius: 6px;
+    
+    background-color: var(--foreground-color);
+    border: 1px solid grey;
+}
+
+.card.interactable:hover{
+    background-color: var(--background-color-secondary);
+}
+
+.card.interactable:active{
+    background-color: var(--foreground-color-active);
+}
+
+.card.interactable.disabled{
+    background-color: var(--foreground-color-disabled);
+}
+
+.card.selected{
+    border: 1px solid yellow;
+}
