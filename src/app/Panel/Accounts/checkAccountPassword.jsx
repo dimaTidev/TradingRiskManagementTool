@@ -8,9 +8,11 @@ import { Size, Variant } from '@/lib/UIComponents/uiCommon'
 import Callout from '@/lib/UIComponents/callout'
 import { useContext } from 'react'
 import { AccountsContext } from './accountsContext'
+import { messageVariant, SideToastContext } from '../messageManager/messageManager';
 
 export default function CheckAccountsPassword({onCompleted}) {
     const accountsContext = useContext(AccountsContext);
+    const sideToastContext = useContext(SideToastContext);
 
     async function handleSubmit(e){
         e.preventDefault();
@@ -26,8 +28,9 @@ export default function CheckAccountsPassword({onCompleted}) {
 
         if(await accountsContext.checkAndSetPasswordAsync(data.password)){
             onCompleted?.();
+            sideToastContext.showMessage("Accounts unlocked", "", messageVariant.SUCCESS);
         }else{
-            console.error("Wrong password!");
+            sideToastContext.showMessage("Wrong password!", "You entered a wrong password", messageVariant.ERROR);
         }
     }
 
@@ -39,7 +42,7 @@ export default function CheckAccountsPassword({onCompleted}) {
                     <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "6px"}}>
                         <div style={{display: "flex", flexDirection: "column", gap: "6px"}}>
                             <InputField name="password" autoComplete="off" placeholder='Enter the password' required/>
-                            <Callout variant={Variant.SECONDARY}>Enter the password</Callout>
+                            <Callout variant={Variant.SECONDARY}>Enter the password to decrypt your API key and Secret.</Callout>
                         </div>
 
                         <hr/>
