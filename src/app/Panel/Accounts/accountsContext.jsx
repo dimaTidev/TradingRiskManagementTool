@@ -25,11 +25,17 @@ export function AccountsContextProvider({ children }) {
     const [_, setRedraw] = useReducer(s => s + 1, 0);
     const accounts = useRef(new Map());
     const [passKey, setPassKey] = useState(undefined);
+    const [isPasswordSaved, setPasswordSaved] = useState(false);
 
-    // // TODO: remove this. It is here only for the test purpose
-    // useEffect(() => {
-    //     localStorage.removeItem(accPassSaveKey);
-    // }, []);
+    useEffect(() => {
+
+        // TODO: remove this. It is here only for the test purpose
+        // localStorage.removeItem(accPassSaveKey);
+        
+        if(localStorage.getItem(accPassSaveKey)){
+            setPasswordSaved(true);
+        }
+    }, []);
 
     useEffect(() => {
         if(passKey == undefined){
@@ -109,6 +115,7 @@ export function AccountsContextProvider({ children }) {
 
         localStorage.setItem(accPassSaveKey, resultHash);
         setPassKey(password);
+        setPasswordSaved(true);
         console.log("password saved:", resultHash);
 
 
@@ -167,7 +174,7 @@ export function AccountsContextProvider({ children }) {
             getAccountForGUID,
             createPasswordAsync,
             checkAndSetPasswordAsync,
-            isPasswordSaved: localStorage.getItem(accPassSaveKey) ? true : false,
+            isPasswordSaved: isPasswordSaved,
             isPasswordChecked: passKey != undefined,
         }}>
             {/* <TestAccountsContextProvider/> */}

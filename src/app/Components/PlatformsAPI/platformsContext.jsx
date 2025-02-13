@@ -10,9 +10,8 @@ platforms.set("bybit", BybitAPI);
 const platformNames = [];
 platforms.forEach((value, key) => platformNames.push(key)); 
 
-console.log("platforms", platforms);
-console.log("platformNames", platformNames);
-
+// console.log("platforms", platforms);
+// console.log("platformNames", platformNames);
 
 export const PlatformsContext = React.createContext({
     
