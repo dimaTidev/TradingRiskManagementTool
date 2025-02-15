@@ -2,7 +2,7 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import { AccountsContext } from './accountsContext';
-import { SideToastContext } from '../messageManager/messageManager';
+import { SideToastContext } from '@/lib/messageManager/messageManager';
 
 export const AccountSelectedContext = React.createContext({
     setAccountGUID(guid){},

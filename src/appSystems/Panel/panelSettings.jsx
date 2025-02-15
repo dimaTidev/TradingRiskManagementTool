@@ -1,7 +1,7 @@
 import ButtonIcon from "@/lib/UIComponents/ButtonIcon";
 import Styles from "./panelSetting.module.css";
 import { Size } from "@/lib/UIComponents/uiCommon";
-import AccountList, { AccountCreationButton } from "./Accounts/accountList";
+import AccountList, { AccountCreationButton } from "../Accounts/accountList";
 
 export default function Settings({onClose, isAdvancedMode}) {
     return (

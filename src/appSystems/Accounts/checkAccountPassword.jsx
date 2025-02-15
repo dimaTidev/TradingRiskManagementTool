@@ -8,7 +8,7 @@ import { Size, Variant } from '@/lib/UIComponents/uiCommon'
 import Callout from '@/lib/UIComponents/callout'
 import { useContext } from 'react'
 import { AccountsContext } from './accountsContext'
-import { messageVariant, SideToastContext } from '../messageManager/messageManager';
+import { messageVariant, SideToastContext } from '@/lib/messageManager/messageManager';
 
 export default function CheckAccountsPassword({onCompleted}) {
     const accountsContext = useContext(AccountsContext);

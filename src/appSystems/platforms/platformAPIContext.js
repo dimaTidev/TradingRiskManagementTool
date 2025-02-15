@@ -2,8 +2,8 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import { PlatformsContext } from './PlatformsAPI/platformsContext';
-import { AccountSelectedContext } from '../Panel/Accounts/accountSelectedContext';
 import './PlatformsAPI/platformAPITypes';
+import { AccountSelectedContext } from '../Accounts/accountSelectedContext';
 
 // Create a context and use it within the component
 export const PlatformAPIContext = React.createContext({

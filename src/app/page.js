@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Styles from "./page.module.css";
-import { PlatfomAPIContextProvider, TestPlatfomAPIContextProvider } from "./Components/platformAPIContext";
-import TradePanelBybit from "./Panel/tradePanelBybit";
-import { SideToastContextProvider } from "./Panel/messageManager/messageManager";
+import { PlatfomAPIContextProvider, TestPlatfomAPIContextProvider } from "../appSystems/platforms/platformAPIContext";
+import { SideToastContextProvider } from "../lib/messageManager/messageManager";
 import TestUIComponents from "@/lib/UIComponents/Test";
-import { AccountsContextProvider } from "./Panel/Accounts/accountsContext";
-import { AccountSelectedContextProvider } from "./Panel/Accounts/accountSelectedContext";
-import { PlatformsContextProvider } from "./Components/PlatformsAPI/platformsContext";
-import CheckAccountsPassword from "./Panel/Accounts/checkAccountPassword";
+import { AccountsContextProvider } from "@/appSystems/Accounts/accountsContext"
+import { AccountSelectedContextProvider } from "@/appSystems/Accounts/accountSelectedContext";
+import { PlatformsContextProvider } from "../appSystems/platforms/PlatformsAPI/platformsContext";
+import CheckAccountsPassword from "@/appSystems/Accounts/checkAccountPassword";
+import TradePanelBybit from "@/appSystems/Panel/tradePanelBybit";
 
 export default function Home() {
   return (
