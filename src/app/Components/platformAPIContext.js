@@ -34,7 +34,7 @@ export const PlatformAPIContext = React.createContext({
 });
 
 
-export function BybitPlatfomAPIContextProvider({ children }) {
+export function PlatfomAPIContextProvider({ children }) {
     const accountSelectedContext = useContext(AccountSelectedContext);
     const platformsContext = useContext(PlatformsContext);
 

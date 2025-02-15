@@ -11,7 +11,6 @@ import OrderCalculationInfo from './Info/orderCalculationInfo';
 import { getTickerPricing } from '../Components/PlatformsAPI/bybit';
 import Settings from './panelSettings';
 import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
-import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
 import { messageVariant, SideToastContext } from './messageManager/messageManager';
 import { Size } from '@/lib/UIComponents/uiCommon';
@@ -227,12 +226,6 @@ export default function TradePanelBybit() {
           {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
           
         </Panel>
-      {/* ) : (
-        <Panel headerTitle="Bybit">
-          <APICredentialsSettings/>
-        </Panel>
-      )  
-      } */}
     </>
     
   )
