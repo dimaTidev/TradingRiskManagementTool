@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Styles from "./inputs.module.css";
 import LabeledField from "./labeledField";
 import InputField from '@/lib/UIComponents/InputField';
-import { roundNumber } from '../Components/tradeUtils';
+import { roundNumber } from '../../appSystems/utils/tradeUtils';
 import Button from '@/lib/UIComponents/Button';
 import { Size, Variant } from '@/lib/UIComponents/uiCommon';
 

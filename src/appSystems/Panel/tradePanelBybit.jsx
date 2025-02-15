@@ -4,18 +4,17 @@ import React, { useContext, useEffect, useReducer, useRef, useState } from 'reac
 import Panel from '@/lib/UIComponents/panel'
 import Styles from "./tradePanel.module.css";
 import OrderButtons from './orderButtons';
-import { PlatformAPIContext } from '../Components/platformAPIContext';
+import { PlatformAPIContext } from '../../appSystems/platforms/platformAPIContext';
 import Inputs from './inputs';
-import { calculateRiskOrderSimple } from '../Components/tradeUtils';
+import { calculateRiskOrderSimple } from '../../appSystems/utils/tradeUtils';
 import OrderCalculationInfo from './Info/orderCalculationInfo';
-import { getTickerPricing } from '../Components/PlatformsAPI/bybit';
+import { getTickerPricing } from '../../appSystems/platforms/PlatformsAPI/bybit';
 import Settings from './panelSettings';
 import ButtonIcon from '@/lib/UIComponents/ButtonIcon';
-import { APICredentialsSettings } from './creadentials/credentials';
 import TickerInfo from './Info/tickerInfo';
-import { messageVariant, SideToastContext } from './messageManager/messageManager';
+import { messageVariant, SideToastContext } from '../../lib/messageManager/messageManager';
 import { Size } from '@/lib/UIComponents/uiCommon';
-import { AccountSelectedContext } from './Accounts/accountSelectedContext';
+import { AccountSelectedContext } from '../Accounts/accountSelectedContext';
 
 const dataSaveKey = "tradingPanelInputs";
 
@@ -227,12 +226,6 @@ export default function TradePanelBybit() {
           {openSettings && <Settings onClose={() => setOpenSettings(false)}/>}
           
         </Panel>
-      {/* ) : (
-        <Panel headerTitle="Bybit">
-          <APICredentialsSettings/>
-        </Panel>
-      )  
-      } */}
     </>
     
   )

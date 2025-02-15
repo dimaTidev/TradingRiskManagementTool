@@ -1,6 +1,6 @@
 import React from 'react'
 import Styles from "./calculator.module.css";
-import { calculateRiskOrderSimple, calculateTakeProfitPrice, roundNumber } from "../Components/tradeUtils";
+import { calculateRiskOrderSimple, calculateTakeProfitPrice, roundNumber } from "../../appSystems/utils/tradeUtils";
 
 export default function Result({capital, targetRisk, leverage, stopLossPercent, entryPrice, className}) {
 

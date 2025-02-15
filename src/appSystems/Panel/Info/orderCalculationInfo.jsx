@@ -1,7 +1,7 @@
 import React from 'react'
 import Styles from "./infoStyles.module.css";
 import { HorizontalInfo } from './horizontalInfo';
-import { roundNumber } from '@/app/Components/tradeUtils';
+import { roundNumber } from '@/appSystems/utils/tradeUtils';
 
 /**
  * Displays order calculation information based on the provided parameters.
